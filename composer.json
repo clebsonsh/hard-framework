@@ -1,0 +1,16 @@
+{
+    "name": "clebson/php-router",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Clebson Moura",
+            "email": "clebson.sh@gmail.com"
+        }
+    ],
+    "require": {}
+}
