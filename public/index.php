@@ -5,11 +5,12 @@ declare(strict_types=1);
 // Register the Composer autoloader...
 require_once __DIR__.'/../vendor/autoload.php';
 
-use App\Infra\Router;
+require_once __DIR__.'/../routes/api.php';
+require_once __DIR__.'/../routes/web.php';
 
-$routes = require_once __DIR__.'/../routes.php';
+use App\Infra\Route;
 
-$router = new Router($routes);
+$router = Route::getInstance();
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
