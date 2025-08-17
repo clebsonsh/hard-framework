@@ -6,6 +6,12 @@
             "App\\": "app/"
         }
     },
+    "scripts": {
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S localhost:8000 -t public"
+        ]
+    },
     "authors": [
         {
             "name": "Clebson Moura",
