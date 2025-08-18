@@ -1,24 +1,27 @@
 {
-    "name": "clebson/php-router",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/"
-        }
-    },
-    "scripts": {
-        "dev": [
-            "Composer\\Config::disableProcessTimeout",
-            "php -S localhost:8000 -t public"
-        ]
-    },
-    "authors": [
-        {
-            "name": "Clebson Moura",
-            "email": "clebson.sh@gmail.com"
-        }
-    ],
-    "require-dev": {
-        "laravel/pint": "^1.24"
+  "name": "clebson/pure-php-oop",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
     }
+  },
+  "scripts": {
+    "dev": [
+      "Composer\\Config::disableProcessTimeout",
+      "php -S localhost:8000 -t public"
+    ],
+    "format": "vendor/bin/pint",
+    "lint": "vendor/bin/phpstan analyze -l 9 app public"
+  },
+  "authors": [
+    {
+      "name": "Clebson Moura",
+      "email": "clebson.sh@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "laravel/pint": "^1.24",
+    "phpstan/phpstan": "^2.1"
+  }
 }
