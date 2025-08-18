@@ -9,6 +9,6 @@ Router::get('/api/test', function () {
     echo json_encode(['test' => 123]);
 });
 
-Router::post('/api/post', function(Request $request){
+Router::post('/api/post', function (Request $request) {
     echo $request;
 });

@@ -18,5 +18,7 @@
             "email": "clebson.sh@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "laravel/pint": "^1.24"
+    }
 }
