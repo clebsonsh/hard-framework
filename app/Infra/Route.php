@@ -2,15 +2,15 @@
 
 namespace App\Infra;
 
-use App\Enums\Http;
+use App\Enums\HttpMethod;
 
 class Route
 {
     public function __construct(
-        private readonly string $path,
-        private readonly Http $method,
+        private readonly string     $path,
+        private readonly HttpMethod $method,
         /** @var callable */
-        private $callback
+        private                     $callback
     ) {}
 
     public function getPath(): string
@@ -18,7 +18,7 @@ class Route
         return $this->path;
     }
 
-    public function getMethod(): Http
+    public function getMethod(): HttpMethod
     {
         return $this->method;
     }
@@ -28,7 +28,7 @@ class Route
         return $this->callback;
     }
 
-    public function matchesPathAndMethod(string $path, Http $method): bool
+    public function matchesPathAndMethod(string $path, HttpMethod $method): bool
     {
         return $this->path === $path and $this->method === $method;
     }

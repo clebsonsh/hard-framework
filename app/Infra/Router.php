@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infra;
 
-use App\Enums\Http;
+use App\Enums\HttpMethod;
 
 class Router
 {
@@ -26,15 +26,15 @@ class Router
 
     public function handleRequest(string $path): void
     {
-        /** @var string $currenMethod */
-        $currenMethod = $_SERVER['REQUEST_METHOD'];
-        $method = Http::from(strtolower($currenMethod));
+        /** @var string $requestMethod */
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        $httpMethod = HttpMethod::from(strtolower($requestMethod));
 
         $callback = null;
 
         /** @var Route $route */
         foreach (self::$routes as $route) {
-            if ($route->matchesPathAndMethod($path, $method)) {
+            if ($route->matchesPathAndMethod($path, $httpMethod)) {
                 $callback = $route->getCallback();
             }
         }
@@ -47,33 +47,33 @@ class Router
         call_user_func($callback, $data);
     }
 
-    private static function register(string $path, Http $method, callable $callback): void
+    private static function register(string $path, HttpMethod $httpMethod, callable $callback): void
     {
-        self::$routes[] = new Route($path, $method, $callback);
+        self::$routes[] = new Route($path, $httpMethod, $callback);
     }
 
     public static function get(string $path, callable $callback): void
     {
-        self::register($path, Http::GET, $callback);
+        self::register($path, HttpMethod::GET, $callback);
     }
 
     public static function post(string $path, callable $callback): void
     {
-        self::register($path, Http::POST, $callback);
+        self::register($path, HttpMethod::POST, $callback);
     }
 
     public static function put(string $path, callable $callback): void
     {
-        self::register($path, Http::PUT, $callback);
+        self::register($path, HttpMethod::PUT, $callback);
     }
 
     public static function patch(string $path, callable $callback): void
     {
-        self::register($path, Http::PATCH, $callback);
+        self::register($path, HttpMethod::PATCH, $callback);
     }
 
     public static function delete(string $path, callable $callback): void
     {
-        self::register($path, Http::DELETE, $callback);
+        self::register($path, HttpMethod::DELETE, $callback);
     }
 }

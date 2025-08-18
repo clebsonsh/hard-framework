@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Http: string
+enum HttpMethod: string
 {
     case GET = 'get';
     case POST = 'post';
