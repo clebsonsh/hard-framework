@@ -6,21 +6,21 @@ namespace App\Infra;
 
 class Request
 {
-    private static $instance = null;
+    private static Request $instance;
 
     /**
-     * @param  $data  <string, mixed>
+     * @param  array  $data  <string, mixed>
      */
     private function __construct(private readonly array $data) {}
 
     public static function init(): static
     {
-        if (is_null(self::$instance)) {
+        if (! isset(self::$instance)) {
             $requestData = $_REQUEST ?? [];
             $jsonData = json_decode(file_get_contents('php://input'), true) ?? [];
             $data = array_merge($requestData, $jsonData);
 
-            return new static($data);
+            self::$instance = new static($data);
         }
 
         return self::$instance;

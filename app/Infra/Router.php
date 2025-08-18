@@ -8,18 +8,17 @@ use App\Enums\Http;
 
 class Router
 {
-    /** @todo create a object to represent this struture */
-    /** @var <int, <<string, string>,<string, Http, <string, callable>> */
+    /** @var array <int, Route> */
     private static array $routes = [];
 
-    private static $instance;
+    private static Router $instance;
 
     private function __construct() {}
 
     public static function getInstance(): static
     {
-        if (is_null(self::$instance)) {
-            return new static;
+        if (! isset(self::$instance)) {
+            self::$instance = new static;
         }
 
         return self::$instance;
@@ -31,13 +30,14 @@ class Router
 
         $callback = null;
 
+        /** @var Route $route */
         foreach (self::$routes as $route) {
-            if ($route['path'] === $path and $route['method'] === $method) {
-                $callback = $route['callback'];
+            if ($route->matchesPathAndMethod($path, $method)) {
+                $callback = $route->getCallback();
             }
         }
 
-        /** @todo hadle not found routes */
+        /** @todo handle not found routes */
         $callback = $callback ?? fn () => print 'not found';
 
         $data = Request::init();
@@ -45,36 +45,32 @@ class Router
         call_user_func($callback, $data);
     }
 
-    private static function register(string $path, Http $method, callable $callback)
+    private static function register(string $path, Http $method, callable $callback): void
     {
-        self::$routes[] = [
-            'path' => $path,
-            'method' => $method,
-            'callback' => $callback,
-        ];
+        self::$routes[] = new Route($path, $method, $callback);
     }
 
-    public static function get(string $path, callable $callback)
+    public static function get(string $path, callable $callback): void
     {
         self::register($path, Http::GET, $callback);
     }
 
-    public static function post(string $path, callable $callback)
+    public static function post(string $path, callable $callback): void
     {
         self::register($path, Http::POST, $callback);
     }
 
-    public static function put(string $path, callable $callback)
+    public static function put(string $path, callable $callback): void
     {
         self::register($path, Http::PUT, $callback);
     }
 
-    public static function pacth(string $path, callable $callback)
+    public static function patch(string $path, callable $callback): void
     {
         self::register($path, Http::PATCH, $callback);
     }
 
-    public static function deletE(string $path, callable $callback)
+    public static function delete(string $path, callable $callback): void
     {
         self::register($path, Http::DELETE, $callback);
     }
