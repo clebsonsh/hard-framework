@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-header('Content-Type: application/json');
-
 use App\Infra\Request;
-use App\Infra\Route;
+use App\Infra\Router;
 
-Route::get('/api/test', function () {
+Router::get('/api/test', function () {
     echo json_encode(['test' => 123]);
 });
 
-Route::post('/api/post', function(Request $request){
+Router::post('/api/post', function(Request $request){
     echo $request;
 });

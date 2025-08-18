@@ -8,9 +8,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../routes/api.php';
 require_once __DIR__.'/../routes/web.php';
 
-use App\Infra\Route;
+use App\Infra\Router;
 
-$router = Route::getInstance();
+$router = Router::getInstance();
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

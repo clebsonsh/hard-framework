@@ -6,9 +6,10 @@ namespace App\Infra;
 
 use App\Enums\Http;
 
-class Route
+class Router
 {
-    /** @var <Http, <string, callable>> */
+    /** @todo create a object to represent this struture */
+    /** @var <int, <<string, string>,<string, Http, <string, callable>> */
     private static array $routes = [];
 
     private static $instance;
@@ -36,6 +37,7 @@ class Route
             }
         }
 
+        /** @todo hadle not found routes */
         $callback = $callback ?? fn () => print 'not found';
 
         $data = Request::init();

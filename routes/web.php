@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Infra\Route;
+use App\Infra\Router;
 
-Route::get('/', function () {
+Router::get('/', function () {
     echo '<h1>Home</h1>';
 });
 
-Route::get('/about', function () {
+Router::get('/about', function () {
     echo '<h1>About</h1>';
 });
