@@ -15,10 +15,10 @@ class Router
 
     private function __construct() {}
 
-    public static function getInstance(): static
+    public static function getInstance(): Router
     {
         if (! isset(self::$instance)) {
-            self::$instance = new static;
+            self::$instance = new self;
         }
 
         return self::$instance;
@@ -26,7 +26,9 @@ class Router
 
     public function handleRequest(string $path): void
     {
-        $method = Http::from(strtolower($_SERVER['REQUEST_METHOD']));
+        /** @var string $currenMethod */
+        $currenMethod = $_SERVER['REQUEST_METHOD'];
+        $method = Http::from(strtolower($currenMethod));
 
         $callback = null;
 

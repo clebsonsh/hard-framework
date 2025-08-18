@@ -12,6 +12,10 @@ use App\Infra\Router;
 
 $router = Router::getInstance();
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+/** @var string $uri */
+$uri = $_SERVER['REQUEST_URI'];
+
+/** @var string $path */
+$path = parse_url($uri, PHP_URL_PATH);
 
 $router->handleRequest($path);
