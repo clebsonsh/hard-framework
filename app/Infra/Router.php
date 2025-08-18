@@ -11,20 +11,7 @@ class Router
     /** @var array <int, Route> */
     private static array $routes = [];
 
-    private static Router $instance;
-
-    private function __construct() {}
-
-    public static function getInstance(): Router
-    {
-        if (! isset(self::$instance)) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
-    }
-
-    public function handleRequest(string $path): void
+    public static function handleRequest(string $path): void
     {
         /** @var string $requestMethod */
         $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -34,7 +21,7 @@ class Router
 
         /** @var Route $route */
         foreach (self::$routes as $route) {
-            if ($route->matchesPathAndMethod($path, $httpMethod)) {
+            if ($route->match($path, $httpMethod)) {
                 $callback = $route->getCallback();
             }
         }
@@ -42,9 +29,7 @@ class Router
         /** @todo handle not found routes */
         $callback = $callback ?? fn () => print 'not found';
 
-        $data = Request::init();
-
-        call_user_func($callback, $data);
+        call_user_func($callback, new Request);
     }
 
     private static function register(string $path, HttpMethod $httpMethod, callable $callback): void

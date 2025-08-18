@@ -7,10 +7,10 @@ use App\Enums\HttpMethod;
 class Route
 {
     public function __construct(
-        private readonly string     $path,
+        private readonly string $path,
         private readonly HttpMethod $method,
         /** @var callable */
-        private                     $callback
+        private $callback
     ) {}
 
     public function getPath(): string
@@ -28,7 +28,7 @@ class Route
         return $this->callback;
     }
 
-    public function matchesPathAndMethod(string $path, HttpMethod $method): bool
+    public function match(string $path, HttpMethod $method): bool
     {
         return $this->path === $path and $this->method === $method;
     }

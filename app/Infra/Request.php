@@ -6,25 +6,17 @@ namespace App\Infra;
 
 class Request
 {
-    private static Request $instance;
+    /** @var mixed[] */
+    private array $data;
 
-    /**
-     * @param  mixed[]  $data
-     */
-    private function __construct(private readonly array $data) {}
-
-    public static function init(): Request
+    public function __construct()
     {
-        if (! isset(self::$instance)) {
-            $requestData = (array) $_REQUEST;
-            $json = file_get_contents('php://input') ?: '';
-            $jsonData = (array) json_decode($json, true);
-            $data = array_merge($requestData, $jsonData);
+        $requestData = (array) $_REQUEST;
 
-            self::$instance = new self($data);
-        }
+        $json = file_get_contents('php://input') ?: '';
+        $jsonData = (array) json_decode($json, true);
 
-        return self::$instance;
+        $this->data = array_merge($requestData, $jsonData);
     }
 
     public function string(string $field): string
