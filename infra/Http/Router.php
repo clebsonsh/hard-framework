@@ -7,25 +7,36 @@ namespace Infra\Http;
 use Infra\Enums\HttpMethod;
 use Infra\Exceptions\NotFoundException;
 use Infra\Interfaces\RequestHandlerInterface;
+use RuntimeException;
 
 class Router
 {
     /** @var array <int, Route> */
     private static array $routes = [];
 
+    /** @todo handle not authorized requests */
+    /** @todo handle method not allowed request */
     public static function handleRequest(string $path): Response
     {
-        /** @var string $requestMethod */
-        $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $httpMethod = HttpMethod::from(strtolower($requestMethod));
+        $httpMethod = self::detectHttpMethod();
 
-        /** @todo handle not authorized requests */
-        /** @todo handle method not allowed request */
         try {
             return self::getRoute($path, $httpMethod)->handle(new Request);
         } catch (NotFoundException $notFoundException) {
             return (new NotFoundHandler)->handle(new Request($notFoundException->getMessage()));
         }
+    }
+
+    private static function detectHttpMethod(): HttpMethod
+    {
+        /** @var ?string $requestMethod */
+        $requestMethod = $_SERVER['REQUEST_METHOD'] ?? null;
+
+        if ($requestMethod === null) {
+            throw new RuntimeException('No request method found in $_SERVER');
+        }
+
+        return HttpMethod::from(strtolower($requestMethod));
     }
 
     /**
