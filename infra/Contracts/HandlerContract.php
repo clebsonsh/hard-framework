@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Infra\Contracts;
 
 use Infra\Http\Request;
+use Infra\Http\Response;
 
-interface Handler
+interface HandlerContract
 {
-    /** @todo create a response class */
-    public function handle(Request $request);
+    public function handle(Request $request): Response;
 }

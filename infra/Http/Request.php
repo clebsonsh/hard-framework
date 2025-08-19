@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infra;
+namespace Infra\Http;
 
 class Request
 {
@@ -42,8 +42,9 @@ class Request
         return $this->data[$field] ?? null;
     }
 
-    public function __toString(): string
+    /** @return  mixed[] */
+    public function toArray(): array
     {
-        return json_encode($this->data) ?: '';
+        return $this->data;
     }
 }

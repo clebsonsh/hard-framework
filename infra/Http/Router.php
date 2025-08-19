@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Infra;
+namespace Infra\Http;
 
+use Infra\Contracts\HandlerContract;
 use Infra\Enums\HttpMethod;
 
 class Router
@@ -11,54 +12,60 @@ class Router
     /** @var array <int, Route> */
     private static array $routes = [];
 
-    public static function handleRequest(string $path): void
+    public static function handleRequest(string $path): Response
     {
         /** @var string $requestMethod */
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $httpMethod = HttpMethod::from(strtolower($requestMethod));
 
-        $callback = null;
+        $handler = new NotFoundHandler;
 
         /** @var Route $route */
         foreach (self::$routes as $route) {
             if ($route->match($path, $httpMethod)) {
-                $callback = $route->getCallback();
+                $handler = $route->getHandler();
             }
         }
 
-        /** @todo handle not found routes */
-        $callback = $callback ?? fn () => print 'not found';
-
-        call_user_func($callback, new Request);
+        return $handler->handle(new Request);
     }
 
-    private static function register(string $path, HttpMethod $httpMethod, callable $callback): void
+    public static function get(string $path, HandlerContract $handler): void
     {
-        self::$routes[] = new Route($path, $httpMethod, $callback);
+        self::register($path, HttpMethod::GET, $handler);
     }
 
-    public static function get(string $path, callable $callback): void
+    public static function post(string $path, HandlerContract $handler): void
     {
-        self::register($path, HttpMethod::GET, $callback);
+        self::register($path, HttpMethod::POST, $handler);
     }
 
-    public static function post(string $path, callable $callback): void
+    public static function put(string $path, HandlerContract $handler): void
     {
-        self::register($path, HttpMethod::POST, $callback);
+        self::register($path, HttpMethod::PUT, $handler);
     }
 
-    public static function put(string $path, callable $callback): void
+    public static function patch(string $path, HandlerContract $handler): void
     {
-        self::register($path, HttpMethod::PUT, $callback);
+        self::register($path, HttpMethod::PATCH, $handler);
     }
 
-    public static function patch(string $path, callable $callback): void
+    public static function delete(string $path, HandlerContract $handler): void
     {
-        self::register($path, HttpMethod::PATCH, $callback);
+        self::register($path, HttpMethod::DELETE, $handler);
     }
 
-    public static function delete(string $path, callable $callback): void
+    private static function register(string $path, HttpMethod $httpMethod, HandlerContract $handler): void
     {
-        self::register($path, HttpMethod::DELETE, $callback);
+        self::$routes[] = new Route($path, $httpMethod, $handler);
+    }
+
+    public function emit(Response $response): void
+    {
+        http_response_code($response->status);
+        foreach ($response->headers as $k => $v) {
+            header("$k: $v");
+        }
+        echo $response->body;
     }
 }

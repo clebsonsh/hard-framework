@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Handlers\Web;
 
-use Infra\Contracts\Handler;
+use Infra\Contracts\HandlerContract;
 use Infra\Http\Request;
+use Infra\Http\Response;
 
-class AboutHandler implements Handler
+class AboutHandler implements HandlerContract
 {
-    public function handle(Request $request)
+    public function handle(Request $request): Response
     {
-        echo '<h1>About</h1>';
+        return Response::html('<h1>About</h1>');
     }
 }
