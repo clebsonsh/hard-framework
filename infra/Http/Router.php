@@ -18,16 +18,14 @@ class Router
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $httpMethod = HttpMethod::from(strtolower($requestMethod));
 
-        $handler = new NotFoundHandler;
-
         /** @var Route $route */
         foreach (self::$routes as $route) {
             if ($route->match($path, $httpMethod)) {
-                $handler = $route->getHandler();
+                return $route->getHandler()->handle(new Request);
             }
         }
 
-        return $handler->handle(new Request);
+        return (new NotFoundHandler)->handle(new Request);
     }
 
     public static function get(string $path, HandlerContract $handler): void
@@ -58,14 +56,5 @@ class Router
     private static function register(string $path, HttpMethod $httpMethod, HandlerContract $handler): void
     {
         self::$routes[] = new Route($path, $httpMethod, $handler);
-    }
-
-    public function emit(Response $response): void
-    {
-        http_response_code($response->status);
-        foreach ($response->headers as $k => $v) {
-            header("$k: $v");
-        }
-        echo $response->body;
     }
 }
