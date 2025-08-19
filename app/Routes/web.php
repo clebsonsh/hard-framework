@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Infra\Router;
+use Infra\Http\Router;
 
 Router::get('/', function () {
     echo '<h1>Home</h1>';

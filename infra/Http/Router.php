@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infra;
+namespace Infra;
 
-use App\Enums\HttpMethod;
+use Infra\Enums\HttpMethod;
 
 class Router
 {

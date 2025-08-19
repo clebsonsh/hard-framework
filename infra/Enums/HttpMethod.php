@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace Infra\Enums;
 
 enum HttpMethod: string
 {

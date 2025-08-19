@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Infra;
+namespace Infra;
 
-use App\Enums\HttpMethod;
+use Infra\Enums\HttpMethod;
 
 class Route
 {

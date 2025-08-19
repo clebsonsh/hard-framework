@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Infra\Request;
-use App\Infra\Router;
+use Infra\Http\Request;
+use Infra\Http\Router;
 
 Router::get('/api/test', function () {
     echo json_encode(['test' => 123]);
