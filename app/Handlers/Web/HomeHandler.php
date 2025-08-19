@@ -12,6 +12,9 @@ class HomeHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {
-        return Response::html('<h1>Home</h1>');
+        return view('home', [
+            'title' => 'Home',
+            'text' => 'This is the home page.',
+        ]);
     }
 }
