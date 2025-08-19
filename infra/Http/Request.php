@@ -9,14 +9,18 @@ class Request
     /** @var mixed[] */
     private array $data;
 
-    public function __construct()
+    public function __construct(string $errorMessage = '')
     {
         $requestData = (array) $_REQUEST;
 
         $json = file_get_contents('php://input') ?: '';
         $jsonData = (array) json_decode($json, true);
 
-        $this->data = array_merge($requestData, $jsonData);
+        $errorData = [
+            'error' => $errorMessage,
+        ];
+
+        $this->data = array_merge($requestData, $jsonData, $errorData);
     }
 
     public function string(string $field): string
