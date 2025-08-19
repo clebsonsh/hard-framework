@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-use Infra\Contracts\HandlerContract;
+use Infra\Interfaces\RequestHandlerInterface;
 use Infra\Enums\HttpMethod;
 
 class Router
@@ -28,32 +28,32 @@ class Router
         return (new NotFoundHandler)->handle(new Request);
     }
 
-    public static function get(string $path, HandlerContract $handler): void
+    public static function get(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::GET, $handler);
     }
 
-    public static function post(string $path, HandlerContract $handler): void
+    public static function post(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::POST, $handler);
     }
 
-    public static function put(string $path, HandlerContract $handler): void
+    public static function put(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::PUT, $handler);
     }
 
-    public static function patch(string $path, HandlerContract $handler): void
+    public static function patch(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::PATCH, $handler);
     }
 
-    public static function delete(string $path, HandlerContract $handler): void
+    public static function delete(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::DELETE, $handler);
     }
 
-    private static function register(string $path, HttpMethod $httpMethod, HandlerContract $handler): void
+    private static function register(string $path, HttpMethod $httpMethod, RequestHandlerInterface $handler): void
     {
         self::$routes[] = new Route($path, $httpMethod, $handler);
     }

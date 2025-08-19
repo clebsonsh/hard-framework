@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-use Infra\Contracts\HandlerContract;
+use Infra\Interfaces\RequestHandlerInterface;
 
-class NotFoundHandler implements HandlerContract
+class NotFoundHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {

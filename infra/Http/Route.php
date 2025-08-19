@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-use Infra\Contracts\HandlerContract;
+use Infra\Interfaces\RequestHandlerInterface;
 use Infra\Enums\HttpMethod;
 
 readonly class Route
@@ -12,7 +12,7 @@ readonly class Route
     public function __construct(
         private string $path,
         private HttpMethod $method,
-        private HandlerContract $handler
+        private RequestHandlerInterface $handler
     ) {}
 
     public function getPath(): string
@@ -25,7 +25,7 @@ readonly class Route
         return $this->method;
     }
 
-    public function getHandler(): HandlerContract
+    public function getHandler(): RequestHandlerInterface
     {
         return $this->handler;
     }

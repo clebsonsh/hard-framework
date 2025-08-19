@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Handlers\Web;
 
-use Infra\Contracts\HandlerContract;
+use Infra\Interfaces\RequestHandlerInterface;
 use Infra\Http\Request;
 use Infra\Http\Response;
 
-class AboutHandler implements HandlerContract
+class AboutHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {
