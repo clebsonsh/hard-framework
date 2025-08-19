@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-use Infra\Interfaces\RequestHandlerInterface;
 use Infra\Enums\HttpMethod;
+use Infra\Interfaces\RequestHandlerInterface;
 
 readonly class Route
 {
