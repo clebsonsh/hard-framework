@@ -20,8 +20,8 @@ readonly class Route
         return $this->handler;
     }
 
-    public function match(string $path, HttpMethod $method): bool
+    public function match(Request $request): bool
     {
-        return $this->path === $path and $this->method === $method;
+        return $this->path === $request->getPath() and $this->method === $request->getMethod();
     }
 }
