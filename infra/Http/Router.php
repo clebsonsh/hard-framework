@@ -22,28 +22,10 @@ class Router
      */
     public function __construct()
     {
-        // fetch GET and POST data
-        $requestData = $_REQUEST;
-
-        // fetch JSON data
-        $json = file_get_contents('php://input') ?: '';
-        $jsonData = (array) json_decode($json, true);
-
-        /** @var array<string, string> $data */
-        $data = array_merge($requestData, $jsonData);
-
-        $httpMethod = $this->detectHttpMethod();
-
-        /** @var string $uri */
-        $uri = $_SERVER['REQUEST_URI'];
-
-        /** @var string $path */
-        $path = parse_url($uri, PHP_URL_PATH);
-
         $this->request = new Request(
-            path: $path,
-            httpMethod: $httpMethod,
-            data: $data
+            path: $this->getPath(),
+            httpMethod: $this->detectHttpMethod(),
+            data: $this->getData(),
         );
     }
 
@@ -57,6 +39,35 @@ class Router
         }
 
         return HttpMethod::from(strtolower($requestMethod));
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getData(): array
+    {
+        // fetch GET and POST data
+        $requestData = $_REQUEST;
+
+        // fetch JSON data
+        $json = file_get_contents('php://input') ?: '';
+        $jsonData = (array) json_decode($json, true);
+
+        /** @var string[] $data */
+        $data = array_merge($requestData, $jsonData);
+
+        return $data;
+    }
+
+    public function getPath(): string
+    {
+        /** @var string $uri */
+        $uri = $_SERVER['REQUEST_URI'];
+
+        /** @var string $path */
+        $path = parse_url($uri, PHP_URL_PATH);
+
+        return $path;
     }
 
     public static function get(string $path, RequestHandlerInterface $handler): void
