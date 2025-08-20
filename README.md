@@ -1,1 +1,165 @@
-# pure-php-oop
+<p align="center">
+    <svg width="1200" height="320" viewBox="0 0 1200 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HARD framework banner">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#111827"/>
+          <stop offset="1" stop-color="#0B1220"/>
+        </linearGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#g)"/>
+      <!-- wordmark -->
+      <text x="80" y="200"
+            font-family="JetBrains Mono, 'Fira Code', monospace"
+            font-size="140"
+            font-weight="800"
+            letter-spacing="4"
+            fill="#E5E7EB">HARD</text>
+      <!-- minimal block cursor -->
+      <rect x="820" y="132" width="20" height="120" rx="3" fill="#60A5FA" />
+      <!-- subtitle -->
+      <text x="80" y="255"
+            font-family="JetBrains Mono, 'Fira Code', monospace"
+            font-size="28"
+            fill="#9CA3AF">learning by building hard things.</text>
+    </svg>
+</p>
+
+# 💻 Hard
+
+**Hard** is a lightweight, object-oriented framework written in pure PHP.
+It focuses on simplicity, strict typing, and clean architecture principles (SOLID, KISS, DRY).
+
+The goal of **Hard**? Peek behind the curtain of web frameworks, pull them apart, and see if I can make the magic happen myself.
+
+---
+
+## 🚀 Features
+
+* Strict typing across the entire codebase
+* Simple `Router` with support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+* Request and Response abstractions
+* Contracts for request handlers
+* Exceptions for error handling (`NotFound`, etc.)
+
+---
+
+## 🔮 Coming soon
+
+* URL params
+* Middleware
+* Validation
+* And more ...
+
+---
+
+## 📂 Project Structure
+
+```
+hard/
+├── app/
+│   ├── Handlers/        # Your request handlers
+│   └── Routes/          # Route definitions (web.php, api.php)
+├── infra/
+│   ├── Contracts/       # Interfaces and contracts
+│   ├── Enums/           # HTTP method enum
+│   ├── Exceptions/      # Custom exceptions
+│   └── Http/            # Core HTTP classes (Router, Request, Response, Route)
+├── public/
+│   └── index.php        # Front controller
+└── vendor/              # Composer dependencies
+```
+
+---
+
+## ⚡ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/clebsonsh/hard-framework.git
+cd hard
+composer install
+```
+
+Run a development server:
+
+```bash
+composer dev
+```
+
+Visit 👉 [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 🛠 Usage
+
+### Defining Routes
+
+Inside `app/Routes/web.php`:
+
+```php
+use Infra\Http\Router;
+use App\Handlers\HomeHandler;
+
+Router::get('/', new HomeHandler());
+```
+
+Inside `app/Routes/api.php`:
+
+```php
+use Infra\Http\Router;
+use App\Handlers\UserHandler;
+use App\Handlers\PostHandler;
+
+Router::get('/users', new UserHandler());
+Router::post('/users', new PostHandler());
+```
+
+### Writing a Handler
+
+All handlers implement `RequestHandlerInterface`:
+
+```php
+namespace App\Handlers;
+
+use Infra\Http\Request;
+use Infra\Http\Response;
+use Infra\Interfaces\RequestHandlerInterface;
+
+class HomeHandler implements RequestHandlerInterface
+{
+    public function handle(Request $request): Response
+    {
+        return new Response::html('<p>Hello from Hard!<p>');
+    }
+}
+```
+
+---
+
+## ✅ Example Workflow
+
+1. Define a handler in `app/Handlers`
+2. Register it in a route file (`web.php` or `api.php`)
+3. Run the server and visit the route
+
+---
+
+## 🧪 Testing
+
+```php
+/** @todo implement tests */
+```
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome!
+Please open an issue first to discuss what you’d like to change.
+
+---
+
+## 📜 License
+
+MIT License – free to use, modify, and distribute.
