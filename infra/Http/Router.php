@@ -39,21 +39,6 @@ class Router
         return HttpMethod::from(strtolower($requestMethod));
     }
 
-    /**
-     * @throws NotFoundException
-     */
-    private static function getRoute(string $path, HttpMethod $httpMethod): RequestHandlerInterface
-    {
-        /** @var Route $route */
-        foreach (self::$routes as $route) {
-            if ($route->match($path, $httpMethod)) {
-                return $route->getHandler();
-            }
-        }
-
-        throw new NotFoundException;
-    }
-
     public static function get(string $path, RequestHandlerInterface $handler): void
     {
         self::register($path, HttpMethod::GET, $handler);
@@ -83,4 +68,18 @@ class Router
     {
         self::$routes[] = new Route($path, $httpMethod, $handler);
     }
+    /**
+     * @throws NotFoundException
+     */
+    private function getRoute(): RequestHandlerInterface
+    {
+        foreach (self::$routes as $route) {
+            if ($route->match($this->request)) {
+                return $route->getHandler();
+            }
+        }
+
+        throw new NotFoundException;
+    }
+
 }
