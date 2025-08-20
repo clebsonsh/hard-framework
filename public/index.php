@@ -5,21 +5,12 @@ declare(strict_types=1);
 // Register the Composer autoloader...
 require_once __DIR__.'/../vendor/autoload.php';
 
+/** @todo move routes files to a config */
 require_once __DIR__.'/../app/Routes/api.php';
 require_once __DIR__.'/../app/Routes/web.php';
 
 use Infra\Http\Router;
 
-/** @var string $uri */
-$uri = $_SERVER['REQUEST_URI'];
+$router = new Router;
 
-/** @var string $path */
-$path = parse_url($uri, PHP_URL_PATH);
-
-$response = Router::handleRequest($path);
-
-http_response_code($response->status);
-foreach ($response->headers as $k => $v) {
-    header("$k: $v");
-}
-echo $response->body;
+$router->handleRequest();

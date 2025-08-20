@@ -4,24 +4,25 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-class Request
+use Infra\Enums\HttpMethod;
+
+readonly class Request
 {
-    /** @var mixed[] */
-    private array $data;
+    /**
+     * @param  array<string, string>  $data
+     */
+    public function __construct(
+        private string $path,
+        private HttpMethod $httpMethod,
+        //  @todo deal with routeParams private array $routeParams,
 
-    public function __construct(string $errorMessage = '')
-    {
-        $requestData = (array) $_REQUEST;
-
-        $json = file_get_contents('php://input') ?: '';
-        $jsonData = (array) json_decode($json, true);
-
-        $errorData = [
-            'error' => $errorMessage,
-        ];
-
-        $this->data = array_merge($requestData, $jsonData, $errorData);
-    }
+        /**
+         * @todo deal with queryParams/queryString private array $getRequestData,
+         * @todo deal with formPost private array $postRequestData,
+         * @todo for now they are bundled together in data. I'm sure is not a good way to deal with it
+         */
+        private array $data,
+    ) {}
 
     public function string(string $field): string
     {
@@ -50,5 +51,15 @@ class Request
     public function toArray(): array
     {
         return $this->data;
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function getMethod(): HttpMethod
+    {
+        return $this->httpMethod;
     }
 }

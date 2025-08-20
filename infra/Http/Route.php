@@ -15,23 +15,13 @@ readonly class Route
         private RequestHandlerInterface $handler
     ) {}
 
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function getMethod(): HttpMethod
-    {
-        return $this->method;
-    }
-
     public function getHandler(): RequestHandlerInterface
     {
         return $this->handler;
     }
 
-    public function match(string $path, HttpMethod $method): bool
+    public function match(Request $request): bool
     {
-        return $this->path === $path and $this->method === $method;
+        return $this->path === $request->getPath() and $this->method === $request->getMethod();
     }
 }
