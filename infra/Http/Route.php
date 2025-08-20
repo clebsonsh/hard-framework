@@ -15,16 +15,6 @@ readonly class Route
         private RequestHandlerInterface $handler
     ) {}
 
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function getMethod(): HttpMethod
-    {
-        return $this->method;
-    }
-
     public function getHandler(): RequestHandlerInterface
     {
         return $this->handler;
