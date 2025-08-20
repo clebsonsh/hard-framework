@@ -22,11 +22,19 @@ class Router
      */
     public function __construct()
     {
+        $this->registerRoutes();
+
         $this->request = new Request(
             path: $this->getPath(),
             httpMethod: $this->detectHttpMethod(),
             data: $this->getData(),
         );
+    }
+
+    private function registerRoutes(): void
+    {
+        require_once routes_path().'api.php';
+        require_once routes_path().'web.php';
     }
 
     private function detectHttpMethod(): HttpMethod
@@ -44,7 +52,7 @@ class Router
     /**
      * @return string[]
      */
-    public function getData(): array
+    private function getData(): array
     {
         // fetch GET and POST data
         $requestData = $_REQUEST;
@@ -59,7 +67,7 @@ class Router
         return $data;
     }
 
-    public function getPath(): string
+    private function getPath(): string
     {
         /** @var string $uri */
         $uri = $_SERVER['REQUEST_URI'];
@@ -125,7 +133,7 @@ class Router
         throw new NotFoundException;
     }
 
-    public function handleResponse(Response $response): void
+    private function handleResponse(Response $response): void
     {
         http_response_code($response->status);
         foreach ($response->headers as $k => $v) {

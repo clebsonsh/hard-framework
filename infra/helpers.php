@@ -15,6 +15,11 @@ function views_path(): string
     return realpath(ROOT_PATH).'/app/Views/';
 }
 
+function routes_path(): string
+{
+    return realpath(ROOT_PATH).'/app/Routes/';
+}
+
 /** @param array<string, string> $data */
 function view(string $path, array $data = []): Response
 {
