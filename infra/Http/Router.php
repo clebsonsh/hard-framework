@@ -27,7 +27,7 @@ class Router
         }
     }
 
-    private static function detectHttpMethod(): HttpMethod
+    private function detectHttpMethod(): HttpMethod
     {
         /** @var ?string $requestMethod */
         $requestMethod = $_SERVER['REQUEST_METHOD'] ?? null;
