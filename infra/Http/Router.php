@@ -11,20 +11,40 @@ use RuntimeException;
 
 class Router
 {
-    /** @var array <int, Route> */
+    /** @var Route[] */
     private static array $routes = [];
 
-    /** @todo handle not authorized requests */
-    /** @todo handle method not allowed request */
-    public static function handleRequest(string $path): Response
-    {
-        $httpMethod = self::detectHttpMethod();
+    private Request $request;
 
-        try {
-            return self::getRoute($path, $httpMethod)->handle(new Request);
-        } catch (NotFoundException $notFoundException) {
-            return (new NotFoundHandler)->handle(new Request($notFoundException->getMessage()));
-        }
+    /**
+     * @todo handle not authorized requests
+     * @todo handle method not allowed request
+     */
+    public function __construct()
+    {
+        // fetch GET and POST data
+        $requestData = $_REQUEST;
+
+        // fetch JSON data
+        $json = file_get_contents('php://input') ?: '';
+        $jsonData = (array) json_decode($json, true);
+
+        /** @var array<string, string> $data */
+        $data = array_merge($requestData, $jsonData);
+
+        $httpMethod = $this->detectHttpMethod();
+
+        /** @var string $uri */
+        $uri = $_SERVER['REQUEST_URI'];
+
+        /** @var string $path */
+        $path = parse_url($uri, PHP_URL_PATH);
+
+        $this->request = new Request(
+            path: $path,
+            httpMethod: $httpMethod,
+            data: $data
+        );
     }
 
     private function detectHttpMethod(): HttpMethod
@@ -68,6 +88,18 @@ class Router
     {
         self::$routes[] = new Route($path, $httpMethod, $handler);
     }
+
+    public function handleRequest(): void
+    {
+        try {
+            $response = $this->getRoute()->handle($this->request);
+        } catch (NotFoundException) {
+            $response = (new NotFoundHandler)->handle($this->request);
+        }
+
+        $this->handleResponse($response);
+    }
+
     /**
      * @throws NotFoundException
      */
