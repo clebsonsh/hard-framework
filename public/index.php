@@ -18,8 +18,3 @@ $path = parse_url($uri, PHP_URL_PATH);
 
 $response = Router::handleRequest($path);
 
-http_response_code($response->status);
-foreach ($response->headers as $k => $v) {
-    header("$k: $v");
-}
-echo $response->body;

@@ -82,4 +82,12 @@ class Router
         throw new NotFoundException;
     }
 
+    public function handleResponse(Response $response): void
+    {
+        http_response_code($response->status);
+        foreach ($response->headers as $k => $v) {
+            header("$k: $v");
+        }
+        echo $response->body;
+    }
 }
