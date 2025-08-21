@@ -29,7 +29,8 @@
 **Hard** is a lightweight, object-oriented framework written in pure PHP.
 It focuses on simplicity, strict typing, and clean architecture principles (SOLID, KISS, DRY).
 
-The goal of **Hard**? Peek behind the curtain of web frameworks, pull them apart, and see if I can make the magic happen myself.
+The goal of **Hard**? Peek behind the curtain of web frameworks, pull them apart, and see if I can make the magic happen
+myself.
 
 ---
 
@@ -101,7 +102,9 @@ Inside `app/Routes/web.php`:
 use Infra\Http\Router;
 use App\Handlers\HomeHandler;
 
-Router::get('/', new HomeHandler());
+return function (Router $router) {
+    $router->get('/', new HomeHandler);
+};
 ```
 
 Inside `app/Routes/api.php`:
@@ -111,8 +114,10 @@ use Infra\Http\Router;
 use App\Handlers\UserHandler;
 use App\Handlers\PostHandler;
 
-Router::get('/users', new UserHandler());
-Router::post('/users', new PostHandler());
+return function (Router $router) {
+    $router->get('/api/test', new TestHandler);
+    $router->post('/api/post', new PostHandler);
+};
 ```
 
 ### Writing a Handler
