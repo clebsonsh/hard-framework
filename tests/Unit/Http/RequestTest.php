@@ -61,20 +61,22 @@ describe('Data Handling', function () {
     });
 });
 
-it('should return the correct request path', function () {
-    $request = prepareRequest(path: '/users/1');
+describe('Getters', function () {
+    it('should return the correct request path', function () {
+        $request = prepareRequest(path: '/users/1');
 
-    expect($request->getPath())
-        ->toBeString()
-        ->toBe('/users/1');
-});
+        expect($request->getPath())
+            ->toBeString()
+            ->toBe('/users/1');
+    });
 
-it('should return the correct request method', function () {
-    $request = prepareRequest(method: HttpMethod::POST);
+    it('should return the correct request method', function () {
+        $request = prepareRequest(method: HttpMethod::POST);
 
-    expect($request->getMethod())
-        ->toBeInstanceOf(HttpMethod::class)
-        ->toBe(HttpMethod::POST);
+        expect($request->getMethod())
+            ->toBeInstanceOf(HttpMethod::class)
+            ->toBe(HttpMethod::POST);
+    });
 });
 
 function prepareRequest(
