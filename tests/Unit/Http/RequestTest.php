@@ -3,7 +3,11 @@
 use Infra\Enums\HttpMethod;
 use Infra\Http\Request;
 
-describe('request', function () {
+describe('createFromGlobals', function () {
+    afterEach(function () {
+        unset($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+    });
+
     it('should create a request from globals', function () {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/test';
@@ -13,66 +17,64 @@ describe('request', function () {
         expect($request)->toBeInstanceOf(Request::class);
     });
 
-    it('should not create a request from globals if method is null', function () {
-        $_SERVER['REQUEST_METHOD'] = null;
+    it('should throw an exception if request method is not defined', function () {
         $_SERVER['REQUEST_URI'] = '/test';
 
         expect(fn () => Request::createFromGlobals())
             ->toThrow(RuntimeException::class);
     });
+});
 
-    it('should be created', function () {
-        $request = prepareRequest();
-
-        expect($request)->toBeInstanceOf(Request::class);
-    });
-
-    it('should a data field default type be string ', function () {
-        $request = prepareRequest();
-
-        expect($request->test)
-            ->toBeString()
-            ->toBe('data');
-    });
-
-    it('should convert a data field to int ', function () {
-        $request = prepareRequest(data: [
-            'test' => '123',
-        ]);
-
-        expect($request->int('test'))
-            ->toBeInt()
-            ->toBe(123);
-    });
-
-    it('should return request data has array', function () {
-        $data = [
-            'test' => 'data',
-            'data' => 'test',
+describe('Data Handling', function () {
+    beforeEach(function () {
+        $this->data = [
+            'name' => 'John Doe',
+            'age' => '30',
+            'active' => 'true',
         ];
 
-        $request = prepareRequest(data: $data);
-
-        expect($request->toArray())
-            ->toBeArray()
-            ->toBe($data);
+        $this->request = prepareRequest(data: $this->data);
     });
 
-    it('should return request path has string', function () {
-        $request = prepareRequest();
-
-        expect($request->getPath())
+    it('should access request data as properties', function () {
+        expect($this->request->name)
             ->toBeString()
-            ->toBe('/test');
+            ->toBe('John Doe');
     });
 
-    it('should return request method has HttpMethod enum', function () {
-        $request = prepareRequest();
-
-        expect($request->getMethod())
-            ->toBeInstanceOf(HttpMethod::class)
-            ->toBe(HttpMethod::GET);
+    it('should convert a data field to an integer', function () {
+        expect($this->request->int('age'))
+            ->toBeInt()
+            ->toBe(30);
     });
+
+    it('should convert a data field to a boolean', function () {
+        expect($this->request->bool('active'))
+            ->toBeBool()
+            ->toBeTrue();
+    });
+
+    it('should return all data as an array', function () {
+        expect($this->request->toArray())
+            ->toBeArray()
+            ->toBe($this->data);
+    });
+});
+
+it('should return the correct request path', function () {
+    $request = prepareRequest(path: '/users/1');
+
+    expect($request->getPath())
+        ->toBeString()
+        ->toBe('/users/1');
+});
+
+it('should return the correct request method', function () {
+    $request = prepareRequest(method: HttpMethod::POST);
+
+    expect($request->getMethod())
+        ->toBeInstanceOf(HttpMethod::class)
+        ->toBe(HttpMethod::POST);
 });
 
 function prepareRequest(
