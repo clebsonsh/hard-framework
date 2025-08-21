@@ -22,14 +22,63 @@ describe('request', function () {
     });
 
     it('should be created', function () {
-        $path = '/test';
-        $method = HttpMethod::GET;
-        $data = [
-            'test' => 'data',
-        ];
-
-        $request = new Request($path, $method, $data);
+        $request = prepareRequest();
 
         expect($request)->toBeInstanceOf(Request::class);
     });
+
+    it('should a data field default type be string ', function () {
+        $request = prepareRequest();
+
+        expect($request->test)
+            ->toBeString()
+            ->toBe('data');
+    });
+
+    it('should convert a data field to int ', function () {
+        $request = prepareRequest(data: [
+            'test' => '123',
+        ]);
+
+        expect($request->int('test'))
+            ->toBeInt()
+            ->toBe(123);
+    });
+
+    it('should return request data has array', function () {
+        $data = [
+            'test' => 'data',
+            'data' => 'test',
+        ];
+
+        $request = prepareRequest(data: $data);
+
+        expect($request->toArray())
+            ->toBeArray()
+            ->toBe($data);
+    });
+
+    it('should return request path has string', function () {
+        $request = prepareRequest();
+
+        expect($request->getPath())
+            ->toBeString()
+            ->toBe('/test');
+    });
+
+    it('should return request method has HttpMethod enum', function () {
+        $request = prepareRequest();
+
+        expect($request->getMethod())
+            ->toBeInstanceOf(HttpMethod::class)
+            ->toBe(HttpMethod::GET);
+    });
 });
+
+function prepareRequest(
+    string $path = '/test',
+    HttpMethod $method = HttpMethod::GET,
+    array $data = ['test' => 'data'],
+): Request {
+    return new Request($path, $method, $data);
+}
