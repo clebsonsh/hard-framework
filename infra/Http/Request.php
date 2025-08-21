@@ -75,15 +75,6 @@ readonly class Request
         return $path;
     }
 
-    public function string(string $field): string
-    {
-        if (! is_string($this->__get($field))) {
-            return '';
-        }
-
-        return (string) $this->__get($field);
-    }
-
     public function int(string $field): int
     {
         if (! is_int($this->__get($field))) {
