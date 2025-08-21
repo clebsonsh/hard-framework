@@ -17,10 +17,15 @@ describe('http module', function () {
         $request = new Request($path, $method, $data);
         $router = new Router($request);
 
-        $response = Response::json($data);
-        $mockHandler = Mockery::mock(RequestHandlerInterface::class);
-        $mockHandler->shouldReceive('handle')
-            ->andReturn($response);
+        $mockHandler = new class implements RequestHandlerInterface
+        {
+            public function handle(Request $request): Response
+            {
+                return Response::json([
+                    'test' => 'data',
+                ]);
+            }
+        };
 
         $router->get('/test', $mockHandler);
 
