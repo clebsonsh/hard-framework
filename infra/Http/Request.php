@@ -77,10 +77,6 @@ readonly class Request
 
     public function int(string $field): int
     {
-        if (! is_int($this->__get($field))) {
-            return 0;
-        }
-
         return (int) $this->__get($field);
     }
 
