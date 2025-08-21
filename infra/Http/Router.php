@@ -7,105 +7,48 @@ namespace Infra\Http;
 use Infra\Enums\HttpMethod;
 use Infra\Exceptions\NotFoundException;
 use Infra\Interfaces\RequestHandlerInterface;
-use RuntimeException;
 
 class Router
 {
     /** @var Route[] */
-    private static array $routes = [];
-
-    private Request $request;
+    private array $routes = [];
 
     /**
      * @todo handle not authorized requests
      * @todo handle method not allowed request
      */
-    public function __construct()
-    {
-        $this->registerRoutes();
+    public function __construct(
+        private readonly Request $request,
+    ) {}
 
-        $this->request = new Request(
-            path: $this->getPath(),
-            httpMethod: $this->detectHttpMethod(),
-            data: $this->getData(),
-        );
+    public function get(string $path, RequestHandlerInterface $handler): void
+    {
+        $this->register($path, HttpMethod::GET, $handler);
     }
 
-    private function registerRoutes(): void
+    public function post(string $path, RequestHandlerInterface $handler): void
     {
-        require_once routes_path().'api.php';
-        require_once routes_path().'web.php';
+        $this->register($path, HttpMethod::POST, $handler);
     }
 
-    private function detectHttpMethod(): HttpMethod
+    public function put(string $path, RequestHandlerInterface $handler): void
     {
-        /** @var ?string $requestMethod */
-        $requestMethod = $_SERVER['REQUEST_METHOD'] ?? null;
-
-        if ($requestMethod === null) {
-            throw new RuntimeException('No request method found in $_SERVER');
-        }
-
-        return HttpMethod::from(strtolower($requestMethod));
+        $this->register($path, HttpMethod::PUT, $handler);
     }
 
-    /**
-     * @return string[]
-     */
-    private function getData(): array
+    public function patch(string $path, RequestHandlerInterface $handler): void
     {
-        // fetch GET and POST data
-        $requestData = $_REQUEST;
-
-        // fetch JSON data
-        $json = file_get_contents('php://input') ?: '';
-        $jsonData = (array) json_decode($json, true);
-
-        /** @var string[] $data */
-        $data = array_merge($requestData, $jsonData);
-
-        return $data;
+        $this->register($path, HttpMethod::PATCH, $handler);
     }
 
-    private function getPath(): string
+    public function delete(string $path, RequestHandlerInterface $handler): void
     {
-        /** @var string $uri */
-        $uri = $_SERVER['REQUEST_URI'];
-
-        /** @var string $path */
-        $path = parse_url($uri, PHP_URL_PATH);
-
-        return $path;
+        $this->register($path, HttpMethod::DELETE, $handler);
     }
 
-    public static function get(string $path, RequestHandlerInterface $handler): void
+    private function register(string $path, HttpMethod $httpMethod, RequestHandlerInterface $handler): void
     {
-        self::register($path, HttpMethod::GET, $handler);
-    }
-
-    public static function post(string $path, RequestHandlerInterface $handler): void
-    {
-        self::register($path, HttpMethod::POST, $handler);
-    }
-
-    public static function put(string $path, RequestHandlerInterface $handler): void
-    {
-        self::register($path, HttpMethod::PUT, $handler);
-    }
-
-    public static function patch(string $path, RequestHandlerInterface $handler): void
-    {
-        self::register($path, HttpMethod::PATCH, $handler);
-    }
-
-    public static function delete(string $path, RequestHandlerInterface $handler): void
-    {
-        self::register($path, HttpMethod::DELETE, $handler);
-    }
-
-    private static function register(string $path, HttpMethod $httpMethod, RequestHandlerInterface $handler): void
-    {
-        self::$routes[] = new Route($path, $httpMethod, $handler);
+        $this->routes[] = new Route($path, $httpMethod, $handler);
     }
 
     public function handleRequest(): void
@@ -124,7 +67,7 @@ class Router
      */
     private function getRoute(): RequestHandlerInterface
     {
-        foreach (self::$routes as $route) {
+        foreach ($this->routes as $route) {
             if ($route->match($this->request)) {
                 return $route->getHandler();
             }
