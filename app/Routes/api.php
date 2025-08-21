@@ -6,5 +6,7 @@ use App\Handlers\Api\PostHandler;
 use App\Handlers\Api\TestHandler;
 use Infra\Http\Router;
 
-Router::get('/api/test', new TestHandler);
-Router::post('/api/post', new PostHandler);
+return function (Router $router) {
+    $router->get('/api/test', new TestHandler);
+    $router->post('/api/post', new PostHandler);
+};

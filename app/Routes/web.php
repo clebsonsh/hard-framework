@@ -6,5 +6,7 @@ use App\Handlers\Web\AboutHandler;
 use App\Handlers\Web\HomeHandler;
 use Infra\Http\Router;
 
-Router::get('/', new HomeHandler);
-Router::get('/about', new AboutHandler);
+return function (Router $router) {
+    $router->get('/', new HomeHandler);
+    $router->get('/about', new AboutHandler);
+};
