@@ -84,9 +84,9 @@ readonly class Request
         return (int) $this->__get($field);
     }
 
-    public function __get(string $field): mixed
+    public function __get(string $field): string
     {
-        return $this->data[$field] ?? null;
+        return $this->data[$field] ?? '';
     }
 
     /** @return string[] */
