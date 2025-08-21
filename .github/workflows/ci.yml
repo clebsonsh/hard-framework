@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "*" ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  pint:
+    uses: clebsonsh/ci/.github/workflows/pint.yml@main
+    with:
+      STOP_ON_ERROR: true
+  phpstan:
+    uses: clebsonsh/ci/.github/workflows/php-stan.yml@main
+    with:
+      PHP_STAN_LEVEL: 9
+      STOP_ON_ERROR: true
+  pest:
+    uses: clebsonsh/ci/.github/workflows/pest.yml@main
+    with:
+      STOP_ON_ERROR: true
