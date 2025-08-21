@@ -75,27 +75,14 @@ readonly class Request
         return $path;
     }
 
-    public function string(string $field): string
-    {
-        if (! is_string($this->__get($field))) {
-            return '';
-        }
-
-        return (string) $this->__get($field);
-    }
-
     public function int(string $field): int
     {
-        if (! is_int($this->__get($field))) {
-            return 0;
-        }
-
         return (int) $this->__get($field);
     }
 
-    public function __get(string $field): mixed
+    public function __get(string $field): string
     {
-        return $this->data[$field] ?? null;
+        return $this->data[$field] ?? '';
     }
 
     /** @return string[] */
