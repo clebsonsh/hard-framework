@@ -51,7 +51,7 @@ class Router
         $this->routes[] = new Route($path, $httpMethod, $handler);
     }
 
-    public function handleRequest(): void
+    public function handleRequest(): Response
     {
         try {
             $response = $this->getRoute()->handle($this->request);
@@ -59,7 +59,7 @@ class Router
             $response = (new NotFoundHandler)->handle($this->request);
         }
 
-        $this->handleResponse($response);
+        return $response;
     }
 
     /**
@@ -74,14 +74,5 @@ class Router
         }
 
         throw new NotFoundException;
-    }
-
-    private function handleResponse(Response $response): void
-    {
-        http_response_code($response->status);
-        foreach ($response->headers as $k => $v) {
-            header("$k: $v");
-        }
-        echo $response->body;
     }
 }
