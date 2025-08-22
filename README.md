@@ -1,4 +1,4 @@
-# 💻 Hard
+# 💻 Hard Framework
 
 **Hard** is a lightweight, object-oriented framework written in pure PHP.
 It focuses on simplicity, strict typing, and clean architecture principles (SOLID, KISS, DRY).
