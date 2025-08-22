@@ -15,25 +15,3 @@ function views_path(): string
     return realpath(ROOT_PATH).'/app/Views/';
 }
 
-function routes_path(): string
-{
-    return realpath(ROOT_PATH).'/app/Routes/';
-}
-
-/** @param array<string, string> $data */
-function view(string $path, array $data = []): Response
-{
-    $filePath = views_path().$path.'.html';
-
-    if (! file_exists($filePath)) {
-        throw new RuntimeException("View $path not found");
-    }
-
-    $template = (string) file_get_contents($filePath);
-
-    foreach ($data as $key => $value) {
-        $template = str_replace('{{'.$key.'}}', htmlspecialchars($value), $template);
-    }
-
-    return Response::html($template);
-}
