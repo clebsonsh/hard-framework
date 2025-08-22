@@ -52,6 +52,26 @@ describe('Request Handling', function () {
 
         expect($response->status)->toBe(404);
     });
+
+    it('should inject route parameters into the request object', function () {
+        $request = new Request('/users/123', HttpMethod::GET, []);
+        $router = new Router($request);
+
+        $handler = new class implements RequestHandlerInterface
+        {
+            public function handle(Request $request): Response
+            {
+                return new Response(200);
+            }
+        };
+
+        $router->get('/users/{id}', $handler);
+        $router->handleRequest();
+
+        expect($request)->not->toBeNull()
+            ->and($request->getParam('id'))->toBe('123')
+            ->and($request->getParams())->toBe(['id' => '123']);
+    });
 });
 
 describe('Route Registration', function () {
