@@ -126,9 +126,16 @@ class HomeHandler implements RequestHandlerInterface
 
 ## 🧪 Testing
 
-```php
-/** @todo implement tests */
+This project uses [Pest](https://pestphp.com/) for testing. The test suite provides 100% unit test coverage for the core
+framework components in the `infra/` directory.
+
+To run the entire test suite, use the following Composer script:
+
+```bash
+composer test
 ```
+
+This will execute all tests located in the `tests/` directory.
 
 ---
 
