@@ -12,6 +12,7 @@ myself.
 
 * Strict typing across the entire codebase
 * Simple `Router` with support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+* **Dynamic URL parameters** (e.g., `/users/{id}`)
 * Request and Response abstractions
 * Contracts for request handlers
 * Exceptions for error handling (`NotFound`, etc.)
@@ -20,7 +21,6 @@ myself.
 
 ## 🔮 Coming soon
 
-* URL params
 * Middleware
 * Validation
 * And more ...
@@ -81,22 +81,24 @@ return function (Router $router) {
 };
 ```
 
-Inside `app/Routes/api.php`:
+### Defining Routes with Parameters
+
+You can define dynamic segments in your routes by wrapping a parameter name in curly braces `{}`. The router will
+automatically extract the value from the URL.
 
 ```php
 use Infra\Http\Router;
 use App\Handlers\UserHandler;
-use App\Handlers\PostHandler;
 
 return function (Router $router) {
-    $router->get('/api/test', new TestHandler);
-    $router->post('/api/post', new PostHandler);
+    // This route will match URLs like /users/42 or /users/clebson
+    $router->get('/users/{id}', new UserHandler);
 };
 ```
 
 ### Writing a Handler
 
-All handlers implement `RequestHandlerInterface`:
+All handlers implement `RequestHandlerInterface`. You can access route parameters from the `Request` object.
 
 ```php
 namespace App\Handlers;
@@ -105,11 +107,14 @@ use Infra\Http\Request;
 use Infra\Http\Response;
 use Infra\Interfaces\RequestHandlerInterface;
 
-class HomeHandler implements RequestHandlerInterface
+class UserHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {
-        return new Response::html('<p>Hello from Hard!<p>');
+        // Retrieve the 'id' parameter from the URL
+        $userId = $request->getParam('id');
+
+        return new Response::html("<p>Showing user: {$userId}<p>");
     }
 }
 ```

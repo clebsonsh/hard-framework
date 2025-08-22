@@ -7,21 +7,52 @@ namespace Infra\Http;
 use Infra\Enums\HttpMethod;
 use Infra\Interfaces\RequestHandlerInterface;
 
-readonly class Route
+class Route
 {
+    /** @var string[] */
+    private array $params;
+
     public function __construct(
-        private string $path,
-        private HttpMethod $method,
-        private RequestHandlerInterface $handler
-    ) {}
+        private readonly string $path,
+        private readonly HttpMethod $method,
+        private readonly RequestHandlerInterface $handler
+    ) {
+        $this->params = [];
+    }
 
     public function getHandler(): RequestHandlerInterface
     {
         return $this->handler;
     }
 
+    /** @return  string[]  */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
     public function match(Request $request): bool
     {
-        return $this->path === $request->getPath() and $this->method === $request->getMethod();
+        if ($this->method !== $request->getMethod()) {
+            return false;
+        }
+
+        // Convert route path to a regex pattern
+        // e.g., /users/{id} becomes #^/users/(?P<id>[^/]+)$#
+        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)}/', '(?P<$1>[^/]+)', $this->path);
+        $pattern = '#^'.$pattern.'$#';
+
+        if (preg_match($pattern, $request->getPath(), $matches)) {
+            // Extract named parameters
+            foreach ($matches as $key => $value) {
+                if (is_string($key)) {
+                    $this->params[$key] = $value;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

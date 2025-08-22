@@ -15,7 +15,7 @@
     ],
     "format": "vendor/bin/pint",
     "lint": "vendor/bin/phpstan analyze -l 9 app public infra",
-    "test": "vendor/bin/pest",
+    "test": "vendor/bin/pest --coverage",
     "ci": [
       "composer format",
       "composer lint",
