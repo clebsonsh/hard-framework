@@ -19,6 +19,7 @@ jobs:
     uses: clebsonsh/ci/.github/workflows/php-stan.yml@main
     with:
       PHP_STAN_LEVEL: 9
+      PHP_STAN_FOLDERS: "app public infra"
       STOP_ON_ERROR: true
   pest:
     uses: clebsonsh/ci/.github/workflows/pest.yml@main
