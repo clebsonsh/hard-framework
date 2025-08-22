@@ -7,23 +7,26 @@ namespace Infra\Http;
 use Infra\Enums\HttpMethod;
 use RuntimeException;
 
-readonly class Request
+class Request
 {
+    /** @var string[] */
+    private array $params;
+
     /**
-     * @param  array<string, string>  $data
+     * @param  string[]  $data
      */
     public function __construct(
-        private string $path,
-        private HttpMethod $httpMethod,
-        //  @todo deal with routeParams private array $routeParams,
-
+        private readonly string $path,
+        private readonly HttpMethod $httpMethod,
         /**
          * @todo deal with queryParams/queryString private array $getRequestData,
          * @todo deal with formPost private array $postRequestData,
          * @todo for now they are bundled together in data. I'm sure is not a good way to deal with it
          */
-        private array $data,
-    ) {}
+        private readonly array $data,
+    ) {
+        $this->params = [];
+    }
 
     public static function createFromGlobals(): self
     {
@@ -104,5 +107,22 @@ readonly class Request
     public function getMethod(): HttpMethod
     {
         return $this->httpMethod;
+    }
+
+    /** @param  string[]  $params */
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
+    /** @return  string[]  */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
+    public function getParam(string $key, mixed $default = null): mixed
+    {
+        return $this->params[$key] ?? $default;
     }
 }

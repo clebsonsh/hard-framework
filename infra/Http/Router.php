@@ -54,7 +54,9 @@ class Router
     public function handleRequest(): Response
     {
         try {
-            $response = $this->getRoute()->handle($this->request);
+            $route = $this->getRoute();
+            $this->request->setParams($route->getParams());
+            $response = $route->getHandler()->handle($this->request);
         } catch (NotFoundException) {
             $response = (new NotFoundHandler)->handle($this->request);
         }
@@ -65,11 +67,11 @@ class Router
     /**
      * @throws NotFoundException
      */
-    private function getRoute(): RequestHandlerInterface
+    private function getRoute(): Route
     {
         foreach ($this->routes as $route) {
             if ($route->match($this->request)) {
-                return $route->getHandler();
+                return $route;
             }
         }
 
