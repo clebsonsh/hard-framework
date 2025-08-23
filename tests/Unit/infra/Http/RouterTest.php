@@ -33,14 +33,26 @@ describe('Request Handling', function () {
         expect($response->getStatus())->toBe(404);
     });
 
-    it('should return a 405 response when the path matches but the HTTP method does not', function () {
+    it('should return a 405 HTML response when the web path matches but the HTTP method does not', function () {
         $request = new Request('/test', HttpMethod::POST, []);
         $router = new Router($request);
         $router->get('/test', $this->handler);
 
         $response = $router->handleRequest();
 
-        expect($response->getStatus())->toBe(405);
+        expect($response->getStatus())->toBe(405)
+            ->and($response->getBody())->toBe('<h1>405 Method Not Allowed</h1>');
+    });
+
+    it('should return a 405 JSON response when the api path matches but the HTTP method does not', function () {
+        $request = new Request('/api/test', HttpMethod::POST, []);
+        $router = new Router($request);
+        $router->get('/api/test', $this->handler);
+
+        $response = $router->handleRequest();
+
+        expect($response->getStatus())->toBe(405)
+            ->and($response->getBody())->toBe(json_encode(['error' => 'Method Not Allowed']));
     });
 
     it('should inject route parameters into the request object', function () {
