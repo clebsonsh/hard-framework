@@ -74,4 +74,15 @@ describe('Route Registration', function () {
         'PATCH' => [HttpMethod::PATCH, 'patch'],
         'DELETE' => [HttpMethod::DELETE, 'delete'],
     ]);
+
+    it('should handle a redirect and return a redirect response', function () {
+        $request = new Request('/old-path', HttpMethod::GET, []);
+        $router = new Router($request);
+        $router->redirect('/old-path', '/new-path', 301);
+
+        $response = $router->handleRequest();
+
+        expect($response->status)->toBe(301)
+            ->and($response->headers['Location'])->toBe('/new-path');
+    });
 });
