@@ -33,14 +33,14 @@ describe('Request Handling', function () {
         expect($response->getStatus())->toBe(404);
     });
 
-    it('should return a 404 response when the path matches but the HTTP method does not', function () {
+    it('should return a 405 response when the path matches but the HTTP method does not', function () {
         $request = new Request('/test', HttpMethod::POST, []);
         $router = new Router($request);
         $router->get('/test', $this->handler);
 
         $response = $router->handleRequest();
 
-        expect($response->getStatus())->toBe(404);
+        expect($response->getStatus())->toBe(405);
     });
 
     it('should inject route parameters into the request object', function () {
