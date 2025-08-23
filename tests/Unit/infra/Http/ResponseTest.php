@@ -16,8 +16,8 @@ describe('Constructor', function () {
     it('should create a response with custom values', function () {
         $response = new Response(
             status: 404,
-            headers: ['X-Test' => 'true'],
-            body: 'Not Found'
+            body: 'Not Found',
+            headers: ['X-Test' => 'true']
         );
 
         expect($response->status)->toBe(404)

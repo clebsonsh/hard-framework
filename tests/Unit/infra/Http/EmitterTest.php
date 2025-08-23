@@ -9,11 +9,11 @@ describe('Emitter', function () {
     it('should emit the status code, headers, and body from a response', function () {
         $response = new Response(
             status: 404,
+            body: '{"error":"Not Found"}',
             headers: [
                 'Content-Type' => 'application/json',
                 'X-Test' => 'true',
-            ],
-            body: '{"error":"Not Found"}'
+            ]
         );
         $emitter = new Emitter;
 
@@ -25,7 +25,7 @@ describe('Emitter', function () {
     });
 
     it('should handle a response with no headers and an empty body', function () {
-        $response = new Response(status: 204, headers: [], body: '');
+        $response = new Response(status: 204, body: '', headers: []);
         $emitter = new Emitter;
 
         ob_start();
