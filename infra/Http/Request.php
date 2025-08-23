@@ -82,7 +82,7 @@ class Request
     {
         /** @var string[] $headers */
         $headers = [];
-        
+
         foreach ($_SERVER as $name => $value) {
             if (str_starts_with($name, 'HTTP_')) {
                 // Normalizes the header name from 'HTTP_CONTENT_TYPE' to 'content-type'.
