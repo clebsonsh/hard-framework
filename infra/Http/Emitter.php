@@ -8,12 +8,12 @@ class Emitter
 {
     public function emit(Response $response): void
     {
-        http_response_code($response->status);
+        http_response_code($response->getStatus());
 
-        foreach ($response->headers as $name => $value) {
+        foreach ($response->getHeaders() as $name => $value) {
             header("$name: $value");
         }
 
-        echo $response->body;
+        echo $response->getBody();
     }
 }

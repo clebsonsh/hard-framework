@@ -9,7 +9,7 @@ use Infra\Interfaces\RequestHandlerInterface;
 
 class Route
 {
-    /** @var string[] */
+    /** @var array<string,float|int|string> */
     private array $params;
 
     public function __construct(
@@ -25,7 +25,7 @@ class Route
         return $this->handler;
     }
 
-    /** @return  string[]  */
+    /** @return  array<string,float|int|string> */
     public function getParams(): array
     {
         return $this->params;

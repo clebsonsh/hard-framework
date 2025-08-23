@@ -20,8 +20,8 @@ describe('Request Handling', function () {
 
         $response = $router->handleRequest();
 
-        expect($response->status)->toBe(200)
-            ->and($response->body)->toBe('Success');
+        expect($response->getStatus())->toBe(200)
+            ->and($response->getBody())->toBe('Success');
     });
 
     it('should return a 404 response when no route matches the request URI', function () {
@@ -30,7 +30,7 @@ describe('Request Handling', function () {
 
         $response = $router->handleRequest();
 
-        expect($response->status)->toBe(404);
+        expect($response->getStatus())->toBe(404);
     });
 
     it('should return a 404 response when the path matches but the HTTP method does not', function () {
@@ -40,7 +40,7 @@ describe('Request Handling', function () {
 
         $response = $router->handleRequest();
 
-        expect($response->status)->toBe(404);
+        expect($response->getStatus())->toBe(404);
     });
 
     it('should inject route parameters into the request object', function () {
@@ -51,8 +51,8 @@ describe('Request Handling', function () {
         $router->handleRequest();
 
         expect($request)->not->toBeNull()
-            ->and($request->getParam('id'))->toBe('123')
-            ->and($request->getParams())->toBe(['id' => '123']);
+            ->and($request->getParam('id'))->toBe(123)
+            ->and($request->getParams())->toBe(['id' => 123]);
     });
 });
 
@@ -65,8 +65,8 @@ describe('Route Registration', function () {
         $router->{$routerMethod}('/test', $handler);
         $response = $router->handleRequest();
 
-        expect($response->status)->toBe(201)
-            ->and($response->body)->toBe('Created');
+        expect($response->getStatus())->toBe(201)
+            ->and($response->getBody())->toBe('Created');
     })->with([
         'GET' => [HttpMethod::GET, 'get'],
         'POST' => [HttpMethod::POST, 'post'],
@@ -82,7 +82,7 @@ describe('Route Registration', function () {
 
         $response = $router->handleRequest();
 
-        expect($response->status)->toBe(301)
-            ->and($response->headers['Location'])->toBe('/new-path');
+        expect($response->getStatus())->toBe(301)
+            ->and($response->getHeaders()['Location'])->toBe('/new-path');
     });
 });
