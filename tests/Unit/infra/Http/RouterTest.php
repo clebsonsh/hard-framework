@@ -54,6 +54,42 @@ describe('Request Handling', function () {
             ->and($request->getParam('id'))->toBe(123)
             ->and($request->getParams())->toBe(['id' => 123]);
     });
+
+    it('should cast route parameter to string', function () {
+        $request = new Request('/users/clebson', HttpMethod::GET, []);
+        $router = new Router($request);
+
+        $router->get('/users/{id}', $this->handler);
+        $router->handleRequest();
+
+        expect($request)->not->toBeNull()
+            ->and($request->getParam('id'))->toBe('clebson')
+            ->and($request->getParam('id'))->toBeString();
+    });
+
+    it('should cast route parameter to integer', function () {
+        $request = new Request('/users/42', HttpMethod::GET, []);
+        $router = new Router($request);
+
+        $router->get('/users/{id}', $this->handler);
+        $router->handleRequest();
+
+        expect($request)->not->toBeNull()
+            ->and($request->getParam('id'))->toBe(42)
+            ->and($request->getParam('id'))->toBeInt();
+    });
+
+    it('should cast route parameter to float', function () {
+        $request = new Request('/users/4.2', HttpMethod::GET, []);
+        $router = new Router($request);
+
+        $router->get('/users/{id}', $this->handler);
+        $router->handleRequest();
+
+        expect($request)->not->toBeNull()
+            ->and($request->getParam('id'))->toBe(4.2)
+            ->and($request->getParam('id'))->toBeFloat();
+    });
 });
 
 describe('Route Registration', function () {
