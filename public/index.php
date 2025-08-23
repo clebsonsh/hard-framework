@@ -9,10 +9,10 @@ use Infra\Http\Emitter;
 use Infra\Http\Request;
 use Infra\Http\Router;
 
-// Create a new Request
-$request = Request::createFromGlobals();
-
 try {
+    // Create a new Request
+    $request = Request::createFromGlobals();
+
     // Inject Request into the Router
     $router = new Router($request);
 
