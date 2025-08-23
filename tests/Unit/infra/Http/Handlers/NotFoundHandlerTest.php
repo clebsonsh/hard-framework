@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Infra\Http;
+
+use Infra\Enums\HttpMethod;
+use Infra\Http\Request;
+use Infra\Http\Response;
+use Infra\Http\Router;
+
+describe('Not Found', function () {
+    it('should return not found response', function () {
+        $request = new Request('/not-found', HttpMethod::GET, []);
+        $router = new Router($request);
+
+        $response = $router->handleRequest();
+
+        expect($response)->toBeInstanceOf(Response::class)
+            ->and($response->getBody())->toBe(json_encode(['error' => 'Not Found']))
+            ->and($response->getStatus())->toBe(404);
+    });
+});
