@@ -12,7 +12,8 @@ myself.
 
 * Strict typing across the entire codebase
 * Simple `Router` with support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
-* **Dynamic URL parameters** (e.g., `/users/{id}`)
+* Dynamic URL parameters (e.g., `/users/{id}`)
+* Effortless Redirects
 * Request and Response abstractions
 * Contracts for request handlers
 * Exceptions for error handling (`NotFound`, etc.)
@@ -38,9 +39,11 @@ hard/
 │   ├── Contracts/       # Interfaces and contracts
 │   ├── Enums/           # HTTP method enum
 │   ├── Exceptions/      # Custom exceptions
-│   └── Http/            # Core HTTP classes (Router, Request, Response, Route)
+│   └── Http/            # Core HTTP classes
+│       └── Handlers/    # Core handlers (NotFound, Redirect)
 ├── public/
 │   └── index.php        # Front controller
+├── tests/               # Test suite
 └── vendor/              # Composer dependencies
 ```
 
@@ -93,6 +96,19 @@ use App\Handlers\UserHandler;
 return function (Router $router) {
     // This route will match URLs like /users/42 or /users/clebson
     $router->get('/users/{id}', new UserHandler);
+};
+```
+
+### Defining Redirects
+
+Easily create redirects with a specific HTTP status code.
+
+```php
+use Infra\Http\Router;
+
+return function (Router $router) {
+    // Redirects /old-url to /new-url with a 301 status code
+    $router->redirect('/old-url', '/new-url', 301);
 };
 ```
 
