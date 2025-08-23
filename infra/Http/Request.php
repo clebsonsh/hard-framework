@@ -9,7 +9,7 @@ use RuntimeException;
 
 class Request
 {
-    /** @var string[] */
+    /** @var array<string,float|int|string> */
     private array $params;
 
     /**
@@ -109,13 +109,13 @@ class Request
         return $this->httpMethod;
     }
 
-    /** @param  string[]  $params */
+    /** @param array<string,float|int|string> $params */
     public function setParams(array $params): void
     {
         $this->params = $params;
     }
 
-    /** @return  string[]  */
+    /** @return array<string,float|int|string> */
     public function getParams(): array
     {
         return $this->params;

@@ -9,7 +9,7 @@ use Infra\Interfaces\RequestHandlerInterface;
 
 class Route
 {
-    /** @var string[] */
+    /** @var array<string,float|int|string> */
     private array $params;
 
     public function __construct(
@@ -25,7 +25,7 @@ class Route
         return $this->handler;
     }
 
-    /** @return  string[]  */
+    /** @return  array<string,float|int|string> */
     public function getParams(): array
     {
         return $this->params;
@@ -46,6 +46,13 @@ class Route
             // Extract named parameters
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
+                    if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                        $value = floatval($value);
+                    }
+
+                    if (filter_var($value, FILTER_VALIDATE_INT)) {
+                        $value = intval($value);
+                    }
                     $this->params[$key] = $value;
                 }
             }

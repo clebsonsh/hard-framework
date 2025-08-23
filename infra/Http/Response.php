@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Infra\Http;
 
-class Response
+readonly class Response
 {
     public function __construct(
-        public int $status = 200,
-        public string $body = '',
+        private int $status = 200,
+        private string $body = '',
         /** @var array<string,string> */
-        public array $headers = []
+        private array $headers = []
     ) {}
 
     /** @param mixed[] $data */
@@ -38,5 +38,21 @@ class Response
             status: $status,
             headers: ['Location' => $to]
         );
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    /** @return  string[] */
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 }
