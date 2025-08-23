@@ -6,6 +6,8 @@ namespace Infra\Http;
 
 use Infra\Enums\HttpMethod;
 use Infra\Exceptions\NotFoundException;
+use Infra\Http\Handlers\NotFoundHandler;
+use Infra\Http\Handlers\RedirectHandler;
 use Infra\Interfaces\RequestHandlerInterface;
 
 class Router
@@ -44,6 +46,11 @@ class Router
     public function delete(string $path, RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::DELETE, $handler);
+    }
+
+    public function redirect(string $from, string $to, int $status = 302): void
+    {
+        $this->get($from, new RedirectHandler($to, $status));
     }
 
     private function register(string $path, HttpMethod $httpMethod, RequestHandlerInterface $handler): void
