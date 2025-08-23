@@ -12,11 +12,11 @@ myself.
 
 * Strict typing across the entire codebase
 * Simple `Router` with support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+* Robust error handling for `404 Not Found` and `405 Method Not Allowed`
 * Dynamic URL parameters (e.g., `/users/{id}`)
 * Effortless Redirects
 * Request and Response abstractions
 * Contracts for request handlers
-* Exceptions for error handling (`NotFound`, etc.)
 
 ---
 
@@ -38,9 +38,9 @@ hard/
 ├── infra/
 │   ├── Contracts/       # Interfaces and contracts
 │   ├── Enums/           # HTTP method enum
-│   ├── Exceptions/      # Custom exceptions
+│   ├── Exceptions/      # Custom exceptions (NotFound, MethodNotAllowed)
 │   └── Http/            # Core HTTP classes
-│       └── Handlers/    # Core handlers (NotFound, Redirect)
+│       └── Handlers/    # Core handlers (NotFound, Redirect, MethodNotAllowed)
 ├── public/
 │   └── index.php        # Front controller
 ├── tests/               # Test suite
@@ -157,6 +157,20 @@ composer test
 ```
 
 This will execute all tests located in the `tests/` directory.
+
+---
+
+## 🔬 Static Analysis
+
+This project uses [PHPStan](https://phpstan.org/) for static analysis to find bugs before they reach production.
+
+To run PHPStan, use the following Composer script:
+
+```bash
+composer lint
+```
+
+This will analyze the `app/` ,`infra/` and `public/` directories.
 
 ---
 
