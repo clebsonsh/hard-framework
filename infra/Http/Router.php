@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Infra\Http;
 
 use Infra\Enums\HttpMethod;
+use Infra\Exceptions\MethodNotAllowedException;
 use Infra\Exceptions\NotFoundException;
+use Infra\Http\Handlers\MethodNotAllowedHandler;
 use Infra\Http\Handlers\NotFoundHandler;
 use Infra\Http\Handlers\RedirectHandler;
 use Infra\Interfaces\RequestHandlerInterface;
@@ -15,9 +17,10 @@ class Router
     /** @var Route[] */
     private array $routes = [];
 
+    private bool $pathMatched = false;
+
     /**
      * @todo handle not authorized requests
-     * @todo handle method not allowed request
      */
     public function __construct(
         private readonly Request $request,
@@ -66,6 +69,8 @@ class Router
             $response = $route->getHandler()->handle($this->request);
         } catch (NotFoundException) {
             $response = (new NotFoundHandler)->handle($this->request);
+        } catch (MethodNotAllowedException) {
+            $response = (new MethodNotAllowedHandler)->handle($this->request);
         }
 
         return $response;
@@ -73,6 +78,7 @@ class Router
 
     /**
      * @throws NotFoundException
+     * @throws MethodNotAllowedException
      */
     private function getRoute(): Route
     {
@@ -80,6 +86,14 @@ class Router
             if ($route->match($this->request)) {
                 return $route;
             }
+
+            if ($route->matchPath($this->request)) {
+                $this->pathMatched = true;
+            }
+        }
+
+        if ($this->pathMatched) {
+            throw new MethodNotAllowedException;
         }
 
         throw new NotFoundException;
