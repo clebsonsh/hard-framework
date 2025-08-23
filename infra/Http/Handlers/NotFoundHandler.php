@@ -12,6 +12,10 @@ class NotFoundHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {
-        return Response::json(['error' => 'Not Found'], 404);
+        if ($request->wantsJson()) {
+            return Response::json(['error' => 'Not Found'], 404);
+        }
+
+        return Response::html('<h1>404 Not Found</h1>', 404);
     }
 }

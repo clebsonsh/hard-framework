@@ -12,6 +12,10 @@ class MethodNotAllowedHandler implements RequestHandlerInterface
 {
     public function handle(Request $request): Response
     {
-        return Response::json(['error' => 'Method Not Allowed'], 405);
+        if ($request->wantsJson()) {
+            return Response::json(['error' => 'Method Not Allowed'], 405);
+        }
+
+        return Response::html('<h1>405 Method Not Allowed</h1>', 405);
     }
 }
