@@ -65,7 +65,7 @@ class Route
         return (bool) preg_match($this->pattern, $request->getPath());
     }
 
-    public function extractParams(string $value, string $key): void
+    private function extractParams(string $value, string $key): void
     {
         if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
             $value = floatval($value);
