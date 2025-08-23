@@ -6,4 +6,4 @@ namespace Infra\Exceptions;
 
 use Exception;
 
-class NotFoundException extends Exception {}
+class MethodNotAllowedException extends Exception {}
