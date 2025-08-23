@@ -50,7 +50,7 @@ class Route
         if (preg_match($this->pattern, $request->getPath(), $matches)) {
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
-                    $this->extractParams($value, $key);
+                    $this->params[$key] = $this->parseValue($value);
                 }
             }
 
@@ -65,15 +65,16 @@ class Route
         return (bool) preg_match($this->pattern, $request->getPath());
     }
 
-    private function extractParams(string $value, string $key): void
+    private function parseValue(string $value): float|int|string
     {
-        if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
-            $value = floatval($value);
+        if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+            return (int) $value;
         }
 
-        if (filter_var($value, FILTER_VALIDATE_INT)) {
-            $value = intval($value);
+        if (filter_var($value, FILTER_VALIDATE_FLOAT) !== false) {
+            return (float) $value;
         }
-        $this->params[$key] = $value;
+
+        return $value;
     }
 }
