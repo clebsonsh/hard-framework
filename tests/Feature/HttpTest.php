@@ -6,7 +6,7 @@ use Infra\Enums\HttpMethod;
 use Infra\Http\Request;
 use Infra\Http\Response;
 use Infra\Http\Router;
-use Infra\Interfaces\RequestHandlerInterface;
+use Tests\Doubles\MockRequestHandler;
 
 describe('http module', function () {
     it('should return a response', function () {
@@ -19,15 +19,7 @@ describe('http module', function () {
         $request = new Request($path, $method, $data);
         $router = new Router($request);
 
-        $mockHandler = new class implements RequestHandlerInterface
-        {
-            public function handle(Request $request): Response
-            {
-                return Response::json([
-                    'test' => 'data',
-                ]);
-            }
-        };
+        $mockHandler = new MockRequestHandler(body: json_encode($data));
 
         $router->get('/test', $mockHandler);
 
