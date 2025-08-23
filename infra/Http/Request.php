@@ -18,11 +18,6 @@ class Request
     public function __construct(
         private readonly string $path,
         private readonly HttpMethod $httpMethod,
-        /**
-         * @todo deal with queryParams/queryString private array $getRequestData,
-         * @todo deal with formPost private array $postRequestData,
-         * @todo for now they are bundled together in data. I'm sure is not a good way to deal with it
-         */
         private readonly array $data,
     ) {
         $this->params = [];
@@ -54,17 +49,16 @@ class Request
      */
     private static function getData(): array
     {
-        // fetch GET and POST data
-        $requestData = $_REQUEST;
+        /** @var string[] $getData */
+        $getData = $_GET;
 
-        // fetch JSON data
-        $json = file_get_contents('php://input') ?: '';
-        $jsonData = (array) json_decode($json, true);
+        /** @var string[] $postData */
+        $postData = $_POST;
 
-        /** @var string[] $data */
-        $data = array_merge($requestData, $jsonData);
+        /** @var string[] $jsonData */
+        $jsonData = json_decode(file_get_contents('php://input') ?: '', true) ?? [];
 
-        return $data;
+        return array_merge($getData, $postData, $jsonData);
     }
 
     private static function getUrlPath(): string
