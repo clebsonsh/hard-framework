@@ -46,6 +46,13 @@ class Route
             // Extract named parameters
             foreach ($matches as $key => $value) {
                 if (is_string($key)) {
+                    if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                        $value = floatval($value);
+                    }
+
+                    if (filter_var($value, FILTER_VALIDATE_INT)) {
+                        $value = intval($value);
+                    }
                     $this->params[$key] = $value;
                 }
             }
