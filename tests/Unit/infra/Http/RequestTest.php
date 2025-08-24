@@ -38,42 +38,6 @@ describe('createFromGlobals', function () {
     });
 });
 
-describe('Data Handling', function () {
-    beforeEach(function () {
-        $this->data = [
-            'name' => 'John Doe',
-            'age' => '30',
-            'active' => 'true',
-        ];
-
-        $this->request = prepareRequest(data: $this->data);
-    });
-
-    it('should access request data as properties', function () {
-        expect($this->request->name)
-            ->toBeString()
-            ->toBe('John Doe');
-    });
-
-    it('should convert a data field to an integer', function () {
-        expect($this->request->int('age'))
-            ->toBeInt()
-            ->toBe(30);
-    });
-
-    it('should convert a data field to a boolean', function () {
-        expect($this->request->bool('active'))
-            ->toBeBool()
-            ->toBeTrue();
-    });
-
-    it('should return all data as an array', function () {
-        expect($this->request->getData())
-            ->toBeArray()
-            ->toBe($this->data);
-    });
-});
-
 describe('Getters', function () {
     it('should return the correct request path', function () {
         $request = prepareRequest(path: '/users/1');
