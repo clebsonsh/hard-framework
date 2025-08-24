@@ -63,4 +63,20 @@ describe('Handler Accessor', function () {
 
         expect($route->getHandler())->toBe($handler);
     });
+
+    it('accepts handlers as a class instance', function () {
+        $route = new Route('/test', HttpMethod::GET, new MockRequestHandler);
+
+        expect($route->getHandler())
+            ->toBeInstanceOf(MockRequestHandler::class)
+            ->toBeObject();
+    });
+
+    it('accepts handlers as a class string', function () {
+        $route = new Route('/test', HttpMethod::GET, MockRequestHandler::class);
+
+        expect($route->getHandler())
+            ->toBe(MockRequestHandler::class)
+            ->toBeString();
+    });
 });
