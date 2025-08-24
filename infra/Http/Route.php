@@ -14,10 +14,11 @@ class Route
 
     private string $pattern;
 
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
     public function __construct(
         private readonly string $path,
         private readonly HttpMethod $method,
-        private readonly RequestHandlerInterface $handler
+        private readonly string|RequestHandlerInterface $handler
     ) {
         $this->params = [];
         $this->pattern = $this->compilePath();
@@ -30,7 +31,8 @@ class Route
         return '#^'.$pattern.'$#';
     }
 
-    public function getHandler(): RequestHandlerInterface
+    /** @return class-string<RequestHandlerInterface>|RequestHandlerInterface $handler */
+    public function getHandler(): string|RequestHandlerInterface
     {
         return $this->handler;
     }
