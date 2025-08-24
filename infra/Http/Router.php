@@ -26,27 +26,32 @@ class Router
         private readonly Request $request,
     ) {}
 
-    public function get(string $path, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    public function get(string $path, string|RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::GET, $handler);
     }
 
-    public function post(string $path, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    public function post(string $path, string|RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::POST, $handler);
     }
 
-    public function put(string $path, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    public function put(string $path, string|RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::PUT, $handler);
     }
 
-    public function patch(string $path, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    public function patch(string $path, string|RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::PATCH, $handler);
     }
 
-    public function delete(string $path, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    public function delete(string $path, string|RequestHandlerInterface $handler): void
     {
         $this->register($path, HttpMethod::DELETE, $handler);
     }
@@ -56,7 +61,8 @@ class Router
         $this->get($from, new RedirectHandler($to, $status));
     }
 
-    private function register(string $path, HttpMethod $httpMethod, RequestHandlerInterface $handler): void
+    /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
+    private function register(string $path, HttpMethod $httpMethod, string|RequestHandlerInterface $handler): void
     {
         $this->routes[] = new Route($path, $httpMethod, $handler);
     }
@@ -65,8 +71,14 @@ class Router
     {
         try {
             $route = $this->getRoute();
+
             $this->request->setParams($route->getParams());
-            $response = $route->getHandler()->handle($this->request);
+
+            /** @var class-string<RequestHandlerInterface>|RequestHandlerInterface $handler */
+            $handler = $route->getHandler();
+            $response = is_string($handler)
+                ? (new $handler)->handle($this->request)
+                : $handler->handle($this->request);
         } catch (NotFoundException) {
             $response = (new NotFoundHandler)->handle($this->request);
         } catch (MethodNotAllowedException) {

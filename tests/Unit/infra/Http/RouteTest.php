@@ -12,7 +12,7 @@ describe('Matching Logic', function () {
         $this->handler = new MockRequestHandler;
     });
 
-    it('should correctly determine if a route matches a given request', function (bool $expected, string $routePath, HttpMethod $routeMethod, string $requestPath, HttpMethod $requestMethod) {
+    it('matches a request based on path and method', function (bool $expected, string $routePath, HttpMethod $routeMethod, string $requestPath, HttpMethod $requestMethod) {
         $route = new Route($routePath, $routeMethod, $this->handler);
         $request = new Request($requestPath, $requestMethod, []);
 
@@ -33,7 +33,7 @@ describe('Matching Logic', function () {
         ],
     ]);
 
-    it('should match routes with parameters and extract them', function () {
+    it('matches routes with parameters and extracts them', function () {
         $route = new Route('/users/{id}', HttpMethod::GET, $this->handler);
         $request = new Request('/users/42', HttpMethod::GET, []);
 
@@ -47,7 +47,7 @@ describe('Matching Logic', function () {
             ->and($routeWithMultipleParams->getParams())->toEqual(['year' => '2023', 'month' => '10']);
     });
 
-    it('should not match routes with parameters if the path does not conform', function () {
+    it('does not match when parameters do not conform to the route', function () {
         $route = new Route('/users/{id}', HttpMethod::GET, $this->handler);
         $request = new Request('/users', HttpMethod::GET, []); // Missing ID
 
@@ -56,11 +56,27 @@ describe('Matching Logic', function () {
 });
 
 describe('Handler Accessor', function () {
-    it('should return the correct handler instance', function () {
+    it('returns the correct handler instance', function () {
         $handler = new MockRequestHandler(200, 'Handled');
 
         $route = new Route('/test', HttpMethod::GET, $handler);
 
         expect($route->getHandler())->toBe($handler);
+    });
+
+    it('accepts handlers as a class instance', function () {
+        $route = new Route('/test', HttpMethod::GET, new MockRequestHandler);
+
+        expect($route->getHandler())
+            ->toBeInstanceOf(MockRequestHandler::class)
+            ->toBeObject();
+    });
+
+    it('accepts handlers as a class string', function () {
+        $route = new Route('/test', HttpMethod::GET, MockRequestHandler::class);
+
+        expect($route->getHandler())
+            ->toBe(MockRequestHandler::class)
+            ->toBeString();
     });
 });

@@ -96,18 +96,10 @@ class Request
         return $headers;
     }
 
-    /**
-     * @template T of RequestDtoInterface
-     *
-     * @param  class-string<T>  $requestDto
-     * @return T
-     */
+    /** @param  class-string<RequestDtoInterface>  $requestDto */
     public function getData(string $requestDto): RequestDtoInterface
     {
-        /** @var T $requestData */
-        $requestData = $requestDto::fromRequestData($this->data);
-
-        return $requestData;
+        return $requestDto::fromRequestData($this->data);
     }
 
     public function getPath(): string
