@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Infra\Http;
 
 use Infra\Enums\HttpMethod;
+use Infra\Interfaces\RequestDtoInterface;
 use RuntimeException;
 
 class Request
@@ -95,25 +96,18 @@ class Request
         return $headers;
     }
 
-    public function int(string $field): int
+    /**
+     * @template T of RequestDtoInterface
+     *
+     * @param  class-string<T>  $requestDto
+     * @return T
+     */
+    public function getData(string $requestDto): RequestDtoInterface
     {
-        return (int) $this->__get($field);
-    }
+        /** @var T $requestData */
+        $requestData = $requestDto::fromRequestData($this->data);
 
-    public function bool(string $field): bool
-    {
-        return (bool) $this->__get($field);
-    }
-
-    public function __get(string $field): string
-    {
-        return $this->data[$field] ?? '';
-    }
-
-    /** @return string[] */
-    public function getData(): array
-    {
-        return $this->data;
+        return $requestData;
     }
 
     public function getPath(): string
