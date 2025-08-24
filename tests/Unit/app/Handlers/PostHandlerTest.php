@@ -10,7 +10,7 @@ use Infra\Http\Response;
 use Infra\Http\Router;
 
 describe('Api', function () {
-    it('should return a json response', function () {
+    it('returns a JSON response with data and params for a POST request', function () {
         $data = [
             'title' => 'Test title',
             'content' => 'Test content',

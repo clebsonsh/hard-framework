@@ -10,7 +10,7 @@ describe('createFromGlobals', function () {
         unset($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $_SERVER['HTTP_ACCEPT']);
     });
 
-    it('should create a request from globals', function () {
+    it('creates a Request instance from PHP superglobals', function () {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/test';
 
@@ -19,7 +19,7 @@ describe('createFromGlobals', function () {
         expect($request)->toBeInstanceOf(Request::class);
     });
 
-    it('should get accept headers from globals', function () {
+    it('extracts headers from PHP superglobals', function () {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/test';
         $_SERVER['HTTP_ACCEPT'] = 'application/json';
@@ -30,7 +30,7 @@ describe('createFromGlobals', function () {
             ->and($request->getHeaders())->toBe(['accept' => 'application/json']);
     });
 
-    it('should throw an exception if request method is not defined', function () {
+    it('throws a RuntimeException if REQUEST_METHOD is not defined', function () {
         $_SERVER['REQUEST_URI'] = '/test';
 
         expect(fn () => Request::createFromGlobals())
@@ -39,7 +39,7 @@ describe('createFromGlobals', function () {
 });
 
 describe('Getters', function () {
-    it('should return the correct request path', function () {
+    it('getPath returns the correct request path', function () {
         $request = prepareRequest(path: '/users/1');
 
         expect($request->getPath())
@@ -47,7 +47,7 @@ describe('Getters', function () {
             ->toBe('/users/1');
     });
 
-    it('should return the correct request method', function () {
+    it('getMethod returns the correct request method', function () {
         $request = prepareRequest(method: HttpMethod::POST);
 
         expect($request->getMethod())

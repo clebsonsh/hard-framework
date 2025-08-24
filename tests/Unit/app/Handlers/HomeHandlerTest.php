@@ -10,7 +10,7 @@ use Infra\Http\Response;
 use Infra\Http\Router;
 
 describe('Web', function () {
-    it('should return home page', function () {
+    it('returns a successful response for the home page', function () {
         $request = new Request('/', HttpMethod::GET, []);
         $router = new Router($request);
 
