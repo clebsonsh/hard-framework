@@ -13,7 +13,7 @@ class PostHandler implements RequestHandlerInterface
     public function handle(Request $request): Response
     {
         return Response::json([
-            'data' => $request->toArray(),
+            'data' => $request->getData(),
             'params' => $request->getParams(),
         ]);
     }

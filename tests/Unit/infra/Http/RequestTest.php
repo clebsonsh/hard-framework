@@ -68,7 +68,7 @@ describe('Data Handling', function () {
     });
 
     it('should return all data as an array', function () {
-        expect($this->request->toArray())
+        expect($this->request->getData())
             ->toBeArray()
             ->toBe($this->data);
     });

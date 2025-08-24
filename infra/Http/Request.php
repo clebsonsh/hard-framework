@@ -111,7 +111,7 @@ class Request
     }
 
     /** @return string[] */
-    public function toArray(): array
+    public function getData(): array
     {
         return $this->data;
     }
