@@ -84,11 +84,16 @@ Visit 👉 [http://localhost:8000](http://localhost:8000)
 Inside `app/Routes/web.php`:
 
 ```php
-use Infra\Http\Router;
+use App\Handlers\AboutHandler;
 use App\Handlers\HomeHandler;
+use Infra\Http\Router;
 
 return function (Router $router) {
-    $router->get('/', new HomeHandler);
+    // The handler is a class string, it will be lazy-loaded.
+    $router->get('/', HomeHandler::class);
+
+    // The handler is an instance, it is loaded immediately.
+    $router->get('/about', new AboutHandler);
 };
 ```
 
@@ -98,8 +103,8 @@ You can define dynamic segments in your routes by wrapping a parameter name in c
 automatically extract the value from the URL.
 
 ```php
-use Infra\Http\Router;
 use App\Handlers\UserHandler;
+use Infra\Http\Router;
 
 return function (Router $router) {
     // This route will match URLs like /users/42 or /users/clebson
