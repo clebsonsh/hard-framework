@@ -1,3 +1,11 @@
+# 🚧 Work in Progress 🚧
+
+**This project is currently under active development.**
+
+Features may be incomplete or subject to change.
+
+**It is not recommended for production use.**
+
 # 💻 Hard Framework
 
 **Hard** is a lightweight, object-oriented framework written in pure PHP.
