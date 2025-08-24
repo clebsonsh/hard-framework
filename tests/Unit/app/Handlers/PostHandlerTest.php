@@ -11,7 +11,10 @@ use Infra\Http\Router;
 
 describe('Api', function () {
     it('should return a json response', function () {
-        $data = ['test' => 'data'];
+        $data = [
+            'title' => 'Test title',
+            'content' => 'Test content',
+        ];
         $params = ['id' => 1.1];
 
         $request = new Request("/api/posts/{$params['id']}", HttpMethod::POST, $data);
