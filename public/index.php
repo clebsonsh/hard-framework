@@ -32,8 +32,7 @@ try {
 } catch (Throwable $e) {
     // Case the application crash
     // Log the actual error for the developer
-    // @todo Create proper Application logger
-    error_log($e->getMessage());
+    error((string) $e);
 
     // Show a generic error to the user
     http_response_code(500);
