@@ -45,6 +45,8 @@ class Log
         }
 
         $this->fileHandle = $fileHandle;
+
+        $this->cleanupOldLogs($logsDirectory);
     }
 
     public static function getInstance(): self
@@ -82,6 +84,23 @@ class Log
         $timestamp = '['.date('Y-m-d H:i:s', time())."] $level: ";
 
         return $timestamp.$message.PHP_EOL;
+    }
+
+    private function cleanupOldLogs(string $logsDirectory): void
+    {
+        $cutoff = strtotime('-7 days');
+
+        $logFiles = glob($logsDirectory.'/app-*.log') ?: [];
+
+        foreach ($logFiles as $file) {
+            if (preg_match('/app-(\d{4}\d{2}\d{2})\.log$/', $file, $matches)) {
+                $logDate = strtotime($matches[1]);
+
+                if ($logDate < $cutoff) {
+                    unlink($file);
+                }
+            }
+        }
     }
 
     public function __destruct()
