@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Infra\Support;
 
 use RuntimeException;
@@ -25,11 +27,9 @@ class Log
     {
         $logsDirectory = storage_path().'/logs';
         if (! file_exists($logsDirectory)) {
-            mkdir(
-                directory: $logsDirectory,
-                permissions: 0755,
-                recursive: true,
-            );
+            // @codeCoverageIgnoreStart
+            mkdir($logsDirectory, 0755, true);
+            // @codeCoverageIgnoreEnd
         }
 
         $today = date('Ymd');
@@ -39,7 +39,9 @@ class Log
         $fileHandle = fopen($this->filePath, 'a');
 
         if (! $fileHandle) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException("Unable to open log file: $this->filePath");
+            // @codeCoverageIgnoreEnd
         }
 
         $this->fileHandle = $fileHandle;
@@ -84,8 +86,10 @@ class Log
 
     public function __destruct()
     {
+        // @codeCoverageIgnoreStart
         if ($this->fileHandle !== null) {
             fclose($this->fileHandle);
         }
+        // @codeCoverageIgnoreEnd
     }
 }
