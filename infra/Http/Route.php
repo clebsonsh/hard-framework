@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Infra\Http;
 
 use Infra\Enums\HttpMethod;
+use Infra\Interfaces\MiddlewareInterface;
 use Infra\Interfaces\RequestHandlerInterface;
 
 class Route
 {
     /** @var array<string,float|int|string> */
     private array $params;
+
+    /** @var class-string<MiddlewareInterface>[]|MiddlewareInterface[] */
+    private array $middlewares = [];
 
     private string $pattern;
 
@@ -78,5 +82,19 @@ class Route
         }
 
         return $value;
+    }
+
+    /** @param class-string<MiddlewareInterface>[]|MiddlewareInterface[] $middlewares */
+    public function addMiddlewares(array $middlewares): void
+    {
+        foreach ($middlewares as $middleware) {
+            $this->middlewares[] = $middleware;
+        }
+    }
+
+    /** @return class-string<MiddlewareInterface>[]| MiddlewareInterface[] */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 }
