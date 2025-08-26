@@ -25,6 +25,7 @@ myself.
 * Effortless Redirects
 * Request and Response abstractions
 * Contracts for request handlers
+* Simple file-based logging
 
 ---
 
@@ -51,6 +52,8 @@ hard/
 │       └── Handlers/    # Core handlers (NotFound, Redirect, MethodNotAllowed)
 ├── public/
 │   └── index.php        # Front controller
+├── storage/
+│   └── logs/            # Log files
 ├── tests/               # Test suite
 └── vendor/              # Composer dependencies
 ```
@@ -145,6 +148,29 @@ class UserHandler implements RequestHandlerInterface
 
         return new Response::html("<p>Showing user: {$userId}<p>");
     }
+}
+```
+
+### Logging
+
+The framework provides a simple file-based logging system. You can use the following helper functions to write messages to the log file:
+
+* `info(string $message)`
+* `debug(string $message)`
+* `warn(string $message)`
+* `error(string $message)`
+
+Logs are stored in the `storage/logs` directory, with a new file created each day.
+
+Example:
+```php
+// in any part of your application
+info('This is an informational message.');
+
+try {
+    // some operation that might fail
+} catch (Exception $e) {
+    error((string) $e);
 }
 ```
 
