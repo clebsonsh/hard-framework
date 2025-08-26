@@ -27,58 +27,54 @@ class Router
     ) {}
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    public function get(string $path, string|RequestHandlerInterface $handler): void
+    public function get(string $path, string|RequestHandlerInterface $handler): Route
     {
-        $this->register($path, HttpMethod::GET, $handler);
+        return $this->register($path, HttpMethod::GET, $handler);
     }
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    public function post(string $path, string|RequestHandlerInterface $handler): void
+    public function post(string $path, string|RequestHandlerInterface $handler): Route
     {
-        $this->register($path, HttpMethod::POST, $handler);
+        return $this->register($path, HttpMethod::POST, $handler);
     }
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    public function put(string $path, string|RequestHandlerInterface $handler): void
+    public function put(string $path, string|RequestHandlerInterface $handler): Route
     {
-        $this->register($path, HttpMethod::PUT, $handler);
+        return $this->register($path, HttpMethod::PUT, $handler);
     }
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    public function patch(string $path, string|RequestHandlerInterface $handler): void
+    public function patch(string $path, string|RequestHandlerInterface $handler): Route
     {
-        $this->register($path, HttpMethod::PATCH, $handler);
+        return $this->register($path, HttpMethod::PATCH, $handler);
     }
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    public function delete(string $path, string|RequestHandlerInterface $handler): void
+    public function delete(string $path, string|RequestHandlerInterface $handler): Route
     {
-        $this->register($path, HttpMethod::DELETE, $handler);
+        return $this->register($path, HttpMethod::DELETE, $handler);
     }
 
-    public function redirect(string $from, string $to, int $status = 302): void
+    public function redirect(string $from, string $to, int $status = 302): Route
     {
-        $this->get($from, new RedirectHandler($to, $status));
+        return $this->get($from, new RedirectHandler($to, $status));
     }
 
     /** @param  class-string<RequestHandlerInterface>|RequestHandlerInterface  $handler */
-    private function register(string $path, HttpMethod $httpMethod, string|RequestHandlerInterface $handler): void
+    private function register(string $path, HttpMethod $httpMethod, string|RequestHandlerInterface $handler): Route
     {
-        $this->routes[] = new Route($path, $httpMethod, $handler);
+        $route = new Route($path, $httpMethod, $handler);
+
+        $this->routes[] = $route;
+
+        return $route;
     }
 
     public function handleRequest(): Response
     {
         try {
-            $route = $this->getRoute();
-
-            $this->request->setParams($route->getParams());
-
-            /** @var class-string<RequestHandlerInterface>|RequestHandlerInterface $handler */
-            $handler = $route->getHandler();
-            $response = is_string($handler)
-                ? (new $handler)->handle($this->request)
-                : $handler->handle($this->request);
+            $response = $this->processRoute($this->getRoute());
         } catch (NotFoundException) {
             $response = (new NotFoundHandler)->handle($this->request);
         } catch (MethodNotAllowedException) {
@@ -86,6 +82,30 @@ class Router
         }
 
         return $response;
+    }
+
+    private function processRoute(Route $route): Response
+    {
+        $this->request->setParams($route->getParams());
+
+        $handler = $this->resolveHandler($route);
+
+        $middlewares = $route->getMiddlewares();
+
+        $dispatcher = new MiddlewareDispatcher($handler, $middlewares);
+
+        return $dispatcher->dispatch($this->request);
+    }
+
+    private function resolveHandler(Route $route): RequestHandlerInterface
+    {
+        /** @var class-string<RequestHandlerInterface>|RequestHandlerInterface $routeHandler */
+        $routeHandler = $route->getHandler();
+        if (is_string($routeHandler)) {
+            return new $routeHandler;
+        }
+
+        return $routeHandler;
     }
 
     /**
